@@ -1,2 +1,5 @@
 # macOS
 .DS_Store
+
+# Serena (optional per-developer tooling)
+.serena/
