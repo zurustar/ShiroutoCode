@@ -64,3 +64,19 @@
 **Context**: INCEPTION Phase — User Stories Part 1 approved → Part 2 generation; established commit-and-push-on-finalization convention
 
 ---
+
+## User Stories — Generated Stories Approved + Session Pause
+**Timestamp**: 2026-06-06T00:00:00Z
+**User Input**: "承認はするんですけど、作業は続けずに終了して欲しいです。ここまでで別のPCに移動したいので"
+**AI Response**: "User Stories (stories.md + personas.md) approved. User requested to STOP here (no Workflow Planning this session) to switch machines. Marked User Stories complete in aidlc-state.md. Next stage on resume: Workflow Planning. Committing & pushing all finalized artifacts to origin/main."
+**Context**: INCEPTION Phase — User Stories approved; session paused for machine switch
+
+---
+
+## Durability Mechanism Decision
+**Timestamp**: 2026-06-06T00:00:00Z
+**User Input**: (AskUserQuestion) "私が各ゲートで手動実行"
+**AI Response**: "No config/hook changes. AI will manually commit & push at each approval/finalization gate. Recorded in local memory."
+**Context**: Cross-machine commit-push persistence decision
+
+---
