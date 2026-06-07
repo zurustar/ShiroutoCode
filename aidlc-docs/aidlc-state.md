@@ -13,11 +13,12 @@
 
 ## Workspace State
 - **Existing Code**: No
-- **Programming Languages**: None (none chosen yet)
-- **Build System**: None
+- **Programming Languages**: Go (core engine + CLI). TypeScript deferred for future VSCode frontend.
+- **Build System**: Go modules (go build / go test). Distribution: single static binary.
 - **Project Structure**: Empty (greenfield)
 - **Reverse Engineering Needed**: No
 - **Workspace Root**: /Users/oumi/Documents/GitHub/ShiroutoCode
+- **Architecture**: Headless core + thin frontend. CLI-first (Go). VSCode extension frontend = future phase (out of current scope). (Pivot 2026-06-08)
 
 ## Code Location Rules
 - **Application Code**: Workspace root (NEVER in aidlc-docs/)
@@ -50,4 +51,4 @@
 | Extension | Enabled | Decided At |
 |---|---|---|
 | Security Baseline | Yes | Requirements Analysis |
-| Property-Based Testing | Yes (Blocking, all rules) | Requirements Analysis |
+| Property-Based Testing | Yes (Blocking, all rules; PBT-09: Go → rapid) | Requirements Analysis |

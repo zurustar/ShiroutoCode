@@ -98,3 +98,24 @@
 **Context**: INCEPTION Phase — Workflow Planning approved → Application Design
 
 ---
+
+## Change Request — Architecture Pivot to Go CLI core (CLI-first)
+**Timestamp**: 2026-06-08T00:00:00Z
+**Request**: User confirmed agent will be used OUTSIDE VSCode (standalone CLI / other editors). Decision: adopt headless core + thin frontend pattern, implement core in **Go**, and **build the CLI only first** (defer the VSCode extension frontend). Asked to amend existing docs accordingly.
+**Current State**: INCEPTION — Application Design Part 1 (design plan/questions presented; NO design artifacts generated yet).
+**Impact Assessment**: Affects locked Requirements (NFR-1 tech stack TS→Go; FR-1 VSCode Webview UI → CLI interface for MVP; FR-6 VSCode settings → CLI config), User Stories (E1/E2 reframed to CLI), personas (P1 uses CLI), execution-plan (tech stack, components, PBT framework fast-check→rapid), aidlc-state. No downstream design/code artifacts exist yet, so no cascade rework beyond docs + the not-yet-answered application-design-plan questions.
+**User Confirmation**: "VSCodeの外でも使います。その前提で、まずCLIのみの実装を進めてほしいです。今までのドキュメントに修正が必要ならそれを実施して"
+**Action Taken**: Archived requirements.md, stories.md, personas.md, execution-plan.md as *.backup.20260608T000000Z. Amending requirements/stories/personas/execution-plan/state and revising application-design-plan questions for Go CLI context.
+**Artifacts Affected**: requirements.md, stories.md, personas.md, execution-plan.md, aidlc-state.md, application-design-plan.md
+**Q&A leading to decision**: (1) "Claude Code的にCLI+フロント構成が筋が良い？Goで" → explained headless-core pattern is sound, Go viable, but depends on multi-frontend goal; (2) "VSCodeなしでプラグインはnodeなしで動く?" → No, extensions always run on VSCode-bundled Node; (3) "TSで実装したらVSCode外でNode別途必要?" → Yes, standalone TS needs Node present or fat bundled binary; Go ships single static binary. (4) User: will use outside VSCode → Go CLI-first chosen.
+
+---
+
+## Change Request — Backup Files Removed (git-managed repo)
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "/btw execution-planのバックアップはなぜ作ったのでしょうか？gitで管理しているので人間のためなら不要なのですが"
+**AI Response**: "Explained backups were per workflow-changes.md 'archive before destructive change' rule, but agreed they are redundant in a git-managed repo. Deleted all 4 *.backup.20260608T000000Z files (requirements/stories/personas/execution-plan). Recorded preference in memory: skip AI-DLC archive step for git-tracked files going forward."
+**Status**: Resolved
+**Context**: Doc hygiene — removed redundant manual backups; rely on git history.
+
+---
