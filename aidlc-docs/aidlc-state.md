@@ -4,8 +4,12 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: INCEPTION - User Stories COMPLETE (approved). NEXT ON RESUME: Workflow Planning
-- **Session Note**: Paused 2026-06-06 to switch machines. Resume by reading this file + requirements.md + stories.md + personas.md, then start Workflow Planning.
+- **Current Stage**: INCEPTION - Application Design IN PROGRESS (Part 1: design plan/questions awaiting answers)
+- **Session Note**: Workflow Planning approved 2026-06-08. Execution plan at inception/plans/execution-plan.md. Now in Application Design; design-plan questions at inception/plans/application-design-plan.md awaiting [Answer]: tags.
+
+## Execution Plan Summary
+- **Stages to Execute**: Application Design, Units Planning, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
+- **Stages to Skip**: Reverse Engineering (greenfield), Infrastructure Design (local-only VSCode extension, no cloud infra)
 
 ## Workspace State
 - **Existing Code**: No
@@ -23,15 +27,24 @@
 ## Stage Progress
 ### 🔵 INCEPTION PHASE
 - [x] Workspace Detection
+- [x] Reverse Engineering (SKIPPED - greenfield)
 - [x] Requirements Analysis (approved)
 - [x] User Stories (approved)
-- [ ] Workflow Planning  ← NEXT
-- [ ] Application Design (TBD)
-- [ ] Units Generation (TBD)
+- [x] Workflow Planning (approved)
+- [ ] Application Design — EXECUTE  ← IN PROGRESS
+- [ ] Units Planning — EXECUTE
+- [ ] Units Generation — EXECUTE
 
 ### 🟢 CONSTRUCTION PHASE
-- [ ] Per-Unit stages (TBD)
-- [ ] Build and Test
+- [ ] Functional Design — EXECUTE
+- [ ] NFR Requirements — EXECUTE
+- [ ] NFR Design — EXECUTE
+- [ ] Infrastructure Design — SKIP (local-only, no cloud infra)
+- [ ] Code Generation — EXECUTE
+- [ ] Build and Test — EXECUTE
+
+### 🟡 OPERATIONS PHASE
+- [ ] Operations — PLACEHOLDER
 
 ## Extension Configuration
 | Extension | Enabled | Decided At |
