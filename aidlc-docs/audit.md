@@ -182,3 +182,12 @@
 **Context**: CONSTRUCTION U1 — Functional Design approved → NFR Requirements
 
 ---
+
+## CONSTRUCTION U1 — NFR Requirements Complete (+ U5 input UI decision)
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: (AskUserQuestion) U5 input interface = "C: フルTUI(bubbletea)"; U1 NFR = "おまかせで進める"
+**AI Response**: "Recorded U5 decision: charmbracelet/bubbletea (+bubbles/lipgloss) full TUI for interactive REPL; single-shot stays plain streaming output; streaming must flow through bubbletea Msg/Cmd; dependency increase accepted (noted in unit-of-work.md U5 + tech-stack申し送り). U1 NFR all recommended (T1 Go1.22+, T2 log/slog, T3 yaml.v3, T4 std flag, T5 rapid, govulncheck). Generated nfr-requirements.md (scalability/availability N/A; perf/security/reliability/maintainability/usability reqs) + tech-stack-decisions.md (incl GPL-3.0 license-compat note). Marked checkboxes [x]. Awaiting approval before U1 NFR Design."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U1 — NFR Requirements complete
+
+---

@@ -17,8 +17,8 @@
 | Usability | エラーメッセージの分かりやすさ（R4, US-6.1の前提） |
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U1-foundation/nfr-requirements/nfr-requirements.md`
-- [ ] `construction/U1-foundation/nfr-requirements/tech-stack-decisions.md`
+- [x] `construction/U1-foundation/nfr-requirements/nfr-requirements.md`
+- [x] `construction/U1-foundation/nfr-requirements/tech-stack-decisions.md`
 
 ---
 
@@ -30,7 +30,7 @@
 - **C**: 自前実装
 - **D**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -39,7 +39,7 @@
 - **B**: 別ライブラリ（自由記述）
 - **C**: 設定ファイル形式自体を見直す（例: 標準ライブラリだけで済むJSON）→ Functional Q2の再検討
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -49,7 +49,7 @@ Application Design Q9暫定は標準`flag`。確定しますか？
 - **B**: `cobra` / `urfave/cli` を採用（自由記述）
 - **C**: U5（CLI unit）で最終決定するので保留
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -57,7 +57,7 @@ Application Design Q9暫定は標準`flag`。確定しますか？
 - **A**: **Go 1.22+**（`log/slog` 安定、最近の標準機能を利用可）【推奨】
 - **B**: 別バージョン指定（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -66,11 +66,11 @@ Application Design Q9暫定は標準`flag`。確定しますか？
 - **B**: ログは非同期/バッファリングを最初から要件化する
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q6. その他（任意）
 依存の方針、ライセンス互換（GPL-3.0と依存ライブラリの互換）で気になる点など。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

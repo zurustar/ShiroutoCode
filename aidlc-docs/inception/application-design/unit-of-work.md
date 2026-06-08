@@ -65,6 +65,10 @@ shiroutocode/                       # module: github.com/zurustar/shiroutocode
 
 ## U5. CLI Frontend（統合）
 - **責務**: 対話REPL + 単発実行、イベントの逐次レンダリング、Ctrl-C中断、危険操作の確認プロンプト（非TTYは安全停止）、接続エラーUX。Frontend Port を実装し全体を結線（main）。
+- **入力インタフェース決定（2026-06-08, 利用者選択=C）**: **フルTUI = `charmbracelet/bubbletea`**（+ `bubbles` textinput/textarea で行・複数行編集と履歴、`lipgloss` で装飾）。
+  - **含意（U5 NFR/設計で必ず扱う）**: bubbletea は Elm系の更新ループ + 代替スクリーン。エージェントのストリーミング出力は **bubbletea の Msg/Cmd 経由でモデルへ流し込んで再描画**する設計にする（生の `fmt.Println` 直書きと混在させない）。
+  - **モード差**: 対話REPLは bubbletea プログラム。**単発実行（`shiroutocode "指示"`）は TUI を使わずプレーンなストリーミング標準出力**（パイプ/非TTY/CI 向け、US-5.2の非対話=安全停止と整合）。
+  - 依存増は SECURITY-10 上のトレードオフを許容（利用者判断）。確認プロンプトは bubbles のリスト/確認UIで実装。
 - **コンポーネント**: C1 CLI
 - **パッケージ**: `internal/cli`, `cmd/shiroutocode`
 - **依存**: U1〜U4 すべて（統合点）
