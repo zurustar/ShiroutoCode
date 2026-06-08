@@ -11,8 +11,8 @@
 > 質問は実質的な設計選択のみ。`[Answer]:` 記入。「おまかせ」で推奨採用。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U1-foundation/nfr-design/nfr-design-patterns.md`
-- [ ] `construction/U1-foundation/nfr-design/logical-components.md`
+- [x] `construction/U1-foundation/nfr-design/nfr-design-patterns.md`
+- [x] `construction/U1-foundation/nfr-design/logical-components.md`
 
 ---
 
@@ -24,7 +24,7 @@ SECURITY-03（NFR-S3, R6）の実現方法。
 - **B**: 各ログ呼び出し側でマスクしてから渡す（実装単純だが漏れやすい）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -34,7 +34,7 @@ R4「複数不正をまとめて提示」の実装。
 - **B**: 最初の違反で即時return（実装単純だがUX劣る）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -42,11 +42,11 @@ R4「複数不正をまとめて提示」の実装。
 - **A**: **段階的上書き**（default構造体に各ソースを順に重ね、"設定済みか"を区別して優先順位適用）【推奨】
 - **B**: その他（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q4. その他（任意）
 リトライ等の追加パターン要望（U1にHTTP等は無いため通常不要）。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

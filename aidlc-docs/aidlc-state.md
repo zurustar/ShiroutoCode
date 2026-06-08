@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U1 Foundation / NFR Design IN PROGRESS (Part 1 plan/questions)
+- **Current Stage**: CONSTRUCTION - U1 Foundation / NFR Design COMPLETE (awaiting approval). NEXT: U1 Code Generation (TDD)
 - **Session Note**: INCEPTION complete & approved 2026-06-08. CONSTRUCTION per-unit loop started at U1 Foundation. Functional Design plan at construction/plans/U1-foundation-functional-design-plan.md.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -42,9 +42,9 @@
 **U1 Foundation** ← CURRENT
 - [x] Functional Design — EXECUTE (approved)
 - [x] NFR Requirements — EXECUTE (approved)
-- [ ] NFR Design — EXECUTE  ← IN PROGRESS
-- [ ] Infrastructure Design — SKIP (local-only, no cloud infra)
-- [ ] Code Generation — EXECUTE (TDD)
+- [x] NFR Design — EXECUTE (awaiting approval)
+- [x] Infrastructure Design — SKIP (local-only, no cloud infra)
+- [ ] Code Generation — EXECUTE (TDD)  ← NEXT
 - [ ] (then U2 → U3 → U4 → U5, same per-unit stages)
 - [ ] Build and Test — EXECUTE (after all units)
 

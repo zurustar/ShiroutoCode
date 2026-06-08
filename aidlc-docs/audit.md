@@ -200,3 +200,12 @@
 **Context**: CONSTRUCTION U1 — NFR Requirements approved → NFR Design
 
 ---
+
+## CONSTRUCTION U1 — NFR Design Complete
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended (Q1=A masking slog.Handler decorator, Q2=A errors.Join aggregation, Q3=A staged overlay merge). Generated nfr-design-patterns.md (P1 masking handler, P2 error aggregation, P3 staged merge with presence tracking, P4 fail-close, P5 perf; retry/circuit-breaker/cache N/A) + logical-components.md (LC1 ConfigLoader, LC2 SourceReaders, LC3 Logger, LC4 MaskRuleSet; no infra parts). Infrastructure Design SKIP confirmed. Marked checkboxes [x]. Awaiting approval before U1 Code Generation (TDD)."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U1 — NFR Design complete; next Code Generation (Infrastructure Design skipped)
+
+---
