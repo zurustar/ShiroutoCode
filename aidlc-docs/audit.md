@@ -239,3 +239,11 @@
 **Status**: Awaiting Approval
 **Context**: CONSTRUCTION U1 — Code Generation done; next unit U2 LLM Connectivity
 ---
+
+## CONSTRUCTION U1 — go.mod directive raised to 1.25
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: (AskUserQuestion) "1.25 に上げる（マシン一致）"
+**AI Response**: "Per user decision (overriding my keep-1.23 recommendation), set go.mod 'go 1.25' to match the dev machine toolchain (1.25.7). Rebuilt + retested: build OK, all tests PASS. Updated tech-stack-decisions T1 and test-summary note (tradeoff: build/go install now requires Go 1.25+)."
+**Status**: Done
+**Context**: CONSTRUCTION U1 — toolchain floor decision
+---
