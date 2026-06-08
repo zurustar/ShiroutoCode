@@ -2,7 +2,7 @@
 
 | # | 決定事項 | 採用 | 理由 |
 |---|---|---|---|
-| T1 | 言語 | **Go 1.22+** | NFR-1。`log/slog` 安定、static binary |
+| T1 | 言語 | **Go 1.22+**（実効下限 **1.23**: `rapid` が要求） | NFR-1。`log/slog` 安定、static binary。go.mod は `go 1.23` |
 | T2 | 構造化ログ | **標準 `log/slog`** | 追加依存なし(SECURITY-10)。JSON/text・レベル・属性・`With`相関ID対応 |
 | T3 | 設定ファイル形式/パーサ | **YAML / `gopkg.in/yaml.v3`** | 事実上の標準・安定。Functional Q2=A |
 | T4 | CLIフラグ解析 | **標準 `flag`** | 依存最小化(SECURITY-10)。コマンド面が小さいMVPに十分。U5でサブコマンド増なら再検討 |

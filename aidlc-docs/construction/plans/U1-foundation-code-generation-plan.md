@@ -33,12 +33,12 @@ U1単体では `main` を作らない（CLIはU5）。`go test ./...` が green 
 
 ## 生成ステップ（TDD・順次実行）
 
-### [ ] Step 1: プロジェクト構造セットアップ（greenfield）
+### [x] Step 1: プロジェクト構造セットアップ（greenfield）
 - `go.mod` 作成（module `github.com/zurustar/shiroutocode`, `go 1.22`）
 - 依存追加: `gopkg.in/yaml.v3`, `pgregory.net/rapid`（test）
 - `.gitignore` にビルド成果物（`/bin/`, `*.out` 等）追記（必要なら）
 
-### [ ] Step 2: Logging — テスト先行（RED）
+### [x] Step 2: Logging — テスト先行（RED）
 `internal/log/log_test.go` を先に作成（まだ実装なし＝失敗）:
 - マスク: 任意属性で `authorization/token/api_key/secret/password` 値が出力に生で出ない（**PBT/rapid**, R6）
 - マスクの冪等性（R6）
@@ -46,14 +46,14 @@ U1単体では `main` を作らない（CLIはU5）。`go test ./...` が green 
 - レベルフィルタ: 設定レベル未満は出力されない（**PBT**, R8）
 - 全レコードに timestamp/level、`With(correlationID)` が全件に伝播（R7）
 
-### [ ] Step 3: Logging — 実装（GREEN→REFACTOR）
+### [x] Step 3: Logging — 実装（GREEN→REFACTOR）
 `internal/log/log.go`:
 - `Logger` インタフェース（Info/Warn/Error/With）＋ slogベース実装
 - `maskingHandler`（slog.Handler デコレータ, P1）, `MaskRuleSet`（LC4）
 - `New(cfgっぽい引数: level/format/writer)` 、text/json、`io.Writer` 注入可
 - Step 2 のテストが green になるまで実装・リファクタ
 
-### [ ] Step 4: Config — テスト先行（RED）
+### [x] Step 4: Config — テスト先行（RED）
 `internal/config/config_test.go` を先に作成:
 - 優先順位 flag>env>project>home>default（**PBT/rapid**, R1 全単射性）
 - 環境変数 `SHIROUTO_*` マッピング（R2）
@@ -63,19 +63,19 @@ U1単体では `main` を作らない（CLIはU5）。`go test ./...` が green 
 - 既定にsecretを含まない（R5）
 - 「未設定」と「ゼロ値」を区別（P3）
 
-### [ ] Step 5: Config — 実装（GREEN→REFACTOR）
+### [x] Step 5: Config — 実装（GREEN→REFACTOR）
 `internal/config/config.go`:
 - `Config` / `GuardrailPolicy` / `ConfigSource` 型（domain-entities準拠）
 - `Load(args, env, opts)`：sources読込→段階的上書きマージ(P3)→検証集約(P2)→不変Config
 - ソースリーダ（defaults/yaml(home,project)/env/flag）はテスト可能に分離（LC2）
 - フェイルクローズ（P4）
 
-### [ ] Step 6: コード要約ドキュメント
+### [x] Step 6: コード要約ドキュメント
 `aidlc-docs/construction/U1-foundation/code/` に markdown:
 - `code-summary.md`（生成物一覧・設計対応・拡張コンプライアンス）
 - `test-summary.md`（テスト観点とPBTプロパティの対応表）
 
-### [ ] Step 7: ローカル検証（TDDの締め）
+### [x] Step 7: ローカル検証（TDDの締め）
 - `go build ./...` と `go test ./...`（rapid含む）を実行し **green** を確認
 - 結果を `test-summary.md` に追記（Build and Test ステージで再実行）
 - （注: Goがローカル未導入の場合は、その旨を報告し Build and Test 段で実行に回す）

@@ -224,3 +224,18 @@
 **Status**: Awaiting Approval
 **Context**: CONSTRUCTION U1 — Code Generation planning; greenfield Go module, TDD steps (logging+config, test-first, PBT)
 ---
+
+## CONSTRUCTION U1 — Code Generation Plan Approved → Generation
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "いいよ！"
+**AI Response**: "U1 code generation plan approved. Executing Part 2 (TDD). Go 1.25.7 available; will run tests to green."
+**Status**: Approved
+**Context**: CONSTRUCTION U1 — Code Generation Part 1 approved → Part 2 generation
+---
+
+## CONSTRUCTION U1 — Code Generation Complete (TDD, all green)
+**Timestamp**: 2026-06-08T00:00:00Z
+**AI Response**: "Executed U1 code generation Part 2 via TDD. Created go.mod (module github.com/zurustar/shiroutocode, go 1.23 [rapid requires 1.23]), internal/log/{log.go,log_test.go}, internal/config/{config.go,config_test.go}, .gitignore. Wrote tests first then implementation. Final: go build OK; go test ./... PASS (15 tests incl 4 PBT: precedence R1, URL R4, mask-idempotent R6, level-filter R8); gofmt clean; go vet clean. Summaries at construction/U1-foundation/code/. Marked all plan checkboxes [x]. Awaiting approval before U2."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U1 — Code Generation done; next unit U2 LLM Connectivity
+---

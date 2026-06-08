@@ -3,3 +3,8 @@
 
 # Serena (optional per-developer tooling)
 .serena/
+
+# Go build artifacts
+/bin/
+*.out
+shiroutocode
