@@ -4,8 +4,8 @@
 **早見**: Scalability=N/A（単一クライアント）。Availability/DR=N/A。主論点は **性能（ストリーミング応答性・タイムアウト）/ 信頼性（リトライ＝Functionalで定義済）/ 技術選定（HTTP・SSE）**。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U2-llm/nfr-requirements/nfr-requirements.md`
-- [ ] `construction/U2-llm/nfr-requirements/tech-stack-decisions.md`
+- [x] `construction/U2-llm/nfr-requirements/nfr-requirements.md`
+- [x] `construction/U2-llm/nfr-requirements/tech-stack-decisions.md`
 
 ---
 
@@ -16,7 +16,7 @@
 - **B**: SSE/OpenAIクライアントのサードパーティライブラリを使う（依存増）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -26,7 +26,7 @@
 - **B**: 単一の全体タイムアウトのみ（シンプル）
 - **C**: その他（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -35,7 +35,7 @@
 - **B**: バッファリング/バッチ表示を要件化
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -44,11 +44,11 @@ LM Studio は通常ローカル http。
 - **A**: **http/https 両対応（既定 http://localhost）。リモートhttpsも設定で可。認証ヘッダは持たない（ローカル前提, SECURITY-09）。将来トークンが要る場合は設定経由＋ログマスク**【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q5. その他（任意）
 コネクション再利用(keep-alive)方針、同時リクエスト数（MVPは1）など。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

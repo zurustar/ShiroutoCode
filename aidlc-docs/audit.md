@@ -279,3 +279,11 @@
 **Status**: Approved
 **Context**: CONSTRUCTION U2 — Functional Design approved → NFR Requirements
 ---
+
+## CONSTRUCTION U2 — NFR Requirements Complete
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended. Generated nfr-requirements.md (perf: TTFT-no-buffer, 3-layer timeouts incl stream idle; security: no creds + masking; reliability: retry + ctx cancel; maintainability: httptest mock + PBT) + tech-stack-decisions.md (net/http, bufio SSE, encoding/json, context, httptest — no new deps). Marked checkboxes [x]. Awaiting approval before U2 NFR Design."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U2 — NFR Requirements complete
+---
