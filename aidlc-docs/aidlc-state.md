@@ -4,8 +4,8 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U1 Foundation / Code Generation COMPLETE (awaiting approval). NEXT: U2 LLM Connectivity (Functional Design)
-- **Session Note**: INCEPTION complete & approved 2026-06-08. CONSTRUCTION per-unit loop started at U1 Foundation. Functional Design plan at construction/plans/U1-foundation-functional-design-plan.md.
+- **Current Stage**: CONSTRUCTION - U1 Foundation COMPLETE (all stages done, code green, committed). PAUSED before U2.
+- **Session Note**: PAUSED 2026-06-08 at user request, cleanly between units. U1 fully done & pushed (internal/config + internal/log, 15 tests green incl 4 PBT, go.mod go 1.25). RESUME: read this file + unit-of-work.md + construction/U1-foundation/* , then start U2 LLM Connectivity at Functional Design (per-unit loop: Functional → NFR Req → NFR Design → [Infra SKIP] → Code Gen, TDD).
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
 

@@ -247,3 +247,11 @@
 **Status**: Done
 **Context**: CONSTRUCTION U1 — toolchain floor decision
 ---
+
+## CONSTRUCTION — Workflow Paused (after U1, before U2)
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "一旦止めたい、"
+**AI Response**: "Paused cleanly between units. U1 Foundation fully complete, code green, all artifacts committed & pushed. Recorded resume point in aidlc-state.md: next is U2 LLM Connectivity starting at Functional Design. No work in progress lost."
+**Status**: Paused
+**Context**: CONSTRUCTION — pause boundary after U1, before U2
+---
