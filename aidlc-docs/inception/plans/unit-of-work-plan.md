@@ -7,10 +7,10 @@
 ---
 
 ## 1. 生成プラン（実行チェックリスト／Part 2で実施）
-- [ ] `application-design/unit-of-work.md` — unit定義・責務・コード組織戦略（Greenfield）
-- [ ] `application-design/unit-of-work-dependency.md` — unit間依存マトリクスと実装順序
-- [ ] `application-design/unit-of-work-story-map.md` — 全ストーリー(US-*)のunit割当
-- [ ] unit境界・依存の検証、全ストーリーが必ずいずれかのunitに割当済みであることの確認
+- [x] `application-design/unit-of-work.md` — unit定義・責務・コード組織戦略（Greenfield）
+- [x] `application-design/unit-of-work-dependency.md` — unit間依存マトリクスと実装順序
+- [x] `application-design/unit-of-work-story-map.md` — 全ストーリー(US-*)のunit割当
+- [x] unit境界・依存の検証、全ストーリーが必ずいずれかのunitに割当済みであることの確認
 
 ---
 
@@ -38,7 +38,7 @@ Construction フェーズは **unit単位でループ**（各unitごとに Funct
 - **C**: 別の粒度（例: U3 を Tools と Guardrail に分ける等）→ 自由記述で指定
 - **D**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -48,7 +48,7 @@ U1→U2→U3→U4→U5 の順でよいですか？（依存的に妥当な順）
 - **B**: 別の順序を希望（自由記述）
 - **C**: Q1でBを選んだので該当なし
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -58,7 +58,7 @@ unitごとにどこまで動けば「完了」とみなしますか？
 - **B**: 各unit完了時に、その時点で動く範囲のCLI実行も確認する（モック等で繋ぐ手間あり）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -67,11 +67,11 @@ Application Design で定めた `cmd/shiroutocode` + `internal/{cli,agent,llm,to
 - **A**: これでよい【推奨】
 - **B**: 変更したい（自由記述：モジュールパス/ディレクトリ等）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q5. その他（任意）
 unit分割・順序・命名・テスト方針について追加の要望があれば記述してください。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

@@ -4,8 +4,9 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: INCEPTION - Units Generation IN PROGRESS (Part 1: decomposition plan/questions awaiting answers)
-- **Session Note**: Application Design approved 2026-06-08. Now in Units Generation; decomposition questions at inception/plans/unit-of-work-plan.md awaiting [Answer]: tags.
+- **Current Stage**: INCEPTION - Units Generation COMPLETE (awaiting approval). NEXT: CONSTRUCTION (per-unit loop, starting U1 Foundation)
+- **Session Note**: Units decomposition answered 2026-06-08 (all recommended: 5 units U1-U5, order U1→U5, unit-test/PBT-green completion). Artifacts at inception/application-design/unit-of-work*.md. Awaiting approval before CONSTRUCTION.
+- **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 
 ## Execution Plan Summary
 - **Stages to Execute**: Application Design, Units Planning, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
@@ -33,8 +34,8 @@
 - [x] User Stories (approved)
 - [x] Workflow Planning (approved)
 - [x] Application Design — EXECUTE (approved)
-- [ ] Units Planning — EXECUTE  ← IN PROGRESS
-- [ ] Units Generation — EXECUTE
+- [x] Units Planning — EXECUTE (approved)
+- [x] Units Generation — EXECUTE (awaiting approval)  ← NEXT: CONSTRUCTION
 
 ### 🟢 CONSTRUCTION PHASE
 - [ ] Functional Design — EXECUTE
