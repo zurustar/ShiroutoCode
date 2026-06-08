@@ -10,10 +10,10 @@
 ---
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U1-foundation/functional-design/domain-entities.md` — Config / GuardrailPolicy / LogRecord 等のドメインモデル
-- [ ] `construction/U1-foundation/functional-design/business-rules.md` — 設定の優先順位・検証ルール、マスキングルール（テスト可能な表明 + PBTプロパティ候補）
-- [ ] `construction/U1-foundation/functional-design/business-logic-model.md` — Load フロー / マスキングフロー / エラー処理
-- [ ] 設計の整合性検証（Security Baseline 関連ルールの反映確認）
+- [x] `construction/U1-foundation/functional-design/domain-entities.md` — Config / GuardrailPolicy / LogRecord 等のドメインモデル
+- [x] `construction/U1-foundation/functional-design/business-rules.md` — 設定の優先順位・検証ルール、マスキングルール（テスト可能な表明 + PBTプロパティ候補）
+- [x] `construction/U1-foundation/functional-design/business-logic-model.md` — Load フロー / マスキングフロー / エラー処理
+- [x] 設計の整合性検証（Security Baseline 関連ルールの反映確認）
 
 ---
 
@@ -25,7 +25,7 @@ MVPのConfigに含める項目はこれでよいですか？
 - **A**: これでよい【推奨】
 - **B**: 追加/削除したい（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -35,7 +35,7 @@ MVPのConfigに含める項目はこれでよいですか？
 - **C**: TOML
 - **D**: その他/場所変更（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -44,7 +44,7 @@ MVPのConfigに含める項目はこれでよいですか？
 - **A**: これでよい【推奨】
 - **B**: 変更したい（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -54,7 +54,7 @@ MVPのConfigに含める項目はこれでよいですか？
 - **B**: 既定値で続行できるものは続行し警告
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -64,7 +64,7 @@ MVPのConfigに含める項目はこれでよいですか？
 - **B**: トークン/認証情報のみ（プロンプト本文はマスクしない）
 - **C**: その他（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -73,11 +73,11 @@ MVPのConfigに含める項目はこれでよいですか？
 - **B**: 常にJSON
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q7. その他（任意）
 U1の設定/ログに関する追加要望（環境変数prefix名、設定キー命名、相関ID付与方針など）。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

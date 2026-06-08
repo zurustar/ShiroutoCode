@@ -164,3 +164,12 @@
 **Context**: CONSTRUCTION Phase — U1 Foundation Functional Design Part 1
 
 ---
+
+## CONSTRUCTION U1 — Functional Design Complete
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "全推奨採用" (U1 functional design Q1-Q7 all recommended: config fields as proposed, YAML proj+home, precedence flag>env>proj>home>default with SHIROUTO_ prefix, fail-fast on validation error, mask tokens+prompt-body, stderr text default w/ json+file options)
+**AI Response**: "All answers unambiguous. Generated U1 functional design: domain-entities.md (Config/GuardrailPolicy/ConfigSource/LogRecord/MaskRule), business-rules.md (R1-R8 as testable assertions, PBT candidates marked), business-logic-model.md (Load flow, masking flow, correlation ID, error handling, TDD test-observation table, extension compliance). No UI → no frontend-components.md. Marked plan checkboxes [x]. Awaiting approval before U1 NFR Requirements."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION Phase — U1 Foundation Functional Design complete
+
+---
