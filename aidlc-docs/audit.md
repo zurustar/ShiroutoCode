@@ -263,3 +263,11 @@
 **Status**: Functional Design Part 1 questions presented
 **Context**: CONSTRUCTION U2 — Functional Design Part 1
 ---
+
+## CONSTRUCTION U2 — Functional Design Complete
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended (toolMode auto w/ function->json fallback, single-JSON fallback format, OpenAI roles, typed stream chunks TextDelta/ToolCallDelta/Done, 6-way error taxonomy with generalized messages, retry only retryable kinds, minimal request params). Generated U2 functional design: domain-entities.md (Message/Request/Stream/Chunk/Caps/ToolCall/LLMError), business-rules.md (R1-R7, testable, PBT candidates), business-logic-model.md (Complete/stream/fallback/retry/error-map flows, TDD test table, mock-HTTP strategy, extension compliance). Marked checkboxes [x]. Awaiting approval before U2 NFR Requirements."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U2 — Functional Design complete
+---
