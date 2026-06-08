@@ -3,8 +3,8 @@
 **Unit**: U2。規約: TDD + PBT(rapid)。論理インフラ部品（queue/cache/circuit breaker等）は基本N/A（resilienceはリトライ＋タイムアウトで実現）。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U2-llm/nfr-design/nfr-design-patterns.md`
-- [ ] `construction/U2-llm/nfr-design/logical-components.md`
+- [x] `construction/U2-llm/nfr-design/nfr-design-patterns.md`
+- [x] `construction/U2-llm/nfr-design/logical-components.md`
 
 ---
 
@@ -15,7 +15,7 @@
 - **B**: 単一の全体 context のみ（簡素）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -24,7 +24,7 @@
 - **B**: バックオフ用ライブラリを使う（依存増）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -33,7 +33,7 @@
 - **B**: 一体化（単純）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -42,10 +42,10 @@
 - **B**: 呼び出し各所で分類
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q5. その他（任意）
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

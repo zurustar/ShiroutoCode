@@ -295,3 +295,11 @@
 **Status**: Approved
 **Context**: CONSTRUCTION U2 — NFR Requirements approved → NFR Design
 ---
+
+## CONSTRUCTION U2 — NFR Design Complete
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended. Generated nfr-design-patterns.md (P1 3-layer timeouts, P2 exponential backoff retry, P3 sseReader/streamImpl split, P4 classifyError single fn, P5 fallback control; circuit-breaker/cache N/A) + logical-components.md (LC1 Client, LC2 requestBuilder, LC3 modeResolver, LC4 retrier, LC5 sseReader, LC6 streamImpl, LC7 classifyError, LC8 jsonToolParser). Infrastructure Design SKIP. Marked checkboxes [x]. Awaiting approval before U2 Code Generation (TDD)."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U2 — NFR Design complete; next Code Generation
+---

@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U2 LLM Connectivity / NFR Design IN PROGRESS (Part 1 plan/questions)
+- **Current Stage**: CONSTRUCTION - U2 LLM Connectivity / NFR Design COMPLETE (awaiting approval). NEXT: U2 Code Generation (TDD)
 - **Session Note**: Resumed 2026-06-09. U1 done. U2 functional design generated (all recommended): hybrid tool calling (toolMode auto), single-JSON fallback, SSE chunk kinds, error taxonomy, retry policy. Artifacts at construction/U2-llm/functional-design/.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -49,9 +49,9 @@
 **U2 LLM Connectivity** ← CURRENT
 - [x] Functional Design — EXECUTE (approved)
 - [x] NFR Requirements — EXECUTE (approved)
-- [ ] NFR Design — EXECUTE  ← IN PROGRESS
-- [ ] Infrastructure Design — SKIP
-- [ ] Code Generation — EXECUTE (TDD)
+- [x] NFR Design — EXECUTE (awaiting approval)
+- [x] Infrastructure Design — SKIP
+- [ ] Code Generation — EXECUTE (TDD)  ← NEXT
 - [ ] (then U3 → U4 → U5, same per-unit stages)
 - [ ] Build and Test — EXECUTE (after all units)
 
