@@ -4,8 +4,8 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U1 Foundation COMPLETE (all stages done, code green, committed). PAUSED before U2.
-- **Session Note**: PAUSED 2026-06-08 at user request, cleanly between units. U1 fully done & pushed (internal/config + internal/log, 15 tests green incl 4 PBT, go.mod go 1.25). RESUME: read this file + unit-of-work.md + construction/U1-foundation/* , then start U2 LLM Connectivity at Functional Design (per-unit loop: Functional → NFR Req → NFR Design → [Infra SKIP] → Code Gen, TDD).
+- **Current Stage**: CONSTRUCTION - U2 LLM Connectivity / Functional Design IN PROGRESS (Part 1 plan/questions)
+- **Session Note**: Resumed 2026-06-09. U1 Foundation done (internal/config + internal/log green). Now U2 per-unit loop (Functional → NFR Req → NFR Design → [Infra SKIP] → Code Gen, TDD). U2 plan at construction/plans/U2-llm-functional-design-plan.md.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
 
@@ -44,8 +44,14 @@
 - [x] NFR Requirements — EXECUTE (approved)
 - [x] NFR Design — EXECUTE (awaiting approval)
 - [x] Infrastructure Design — SKIP (local-only, no cloud infra)
-- [x] Code Generation — EXECUTE (TDD) — DONE: internal/config + internal/log, all tests green (awaiting approval)
-- [ ] U2 LLM Connectivity (Functional Design → … → Code Gen)  ← NEXT
+- [x] Code Generation — EXECUTE (TDD) — DONE: internal/config + internal/log, all tests green (approved)
+
+**U2 LLM Connectivity** ← CURRENT
+- [ ] Functional Design — EXECUTE  ← IN PROGRESS
+- [ ] NFR Requirements — EXECUTE
+- [ ] NFR Design — EXECUTE
+- [ ] Infrastructure Design — SKIP
+- [ ] Code Generation — EXECUTE (TDD)
 - [ ] (then U3 → U4 → U5, same per-unit stages)
 - [ ] Build and Test — EXECUTE (after all units)
 

@@ -255,3 +255,11 @@
 **Status**: Paused
 **Context**: CONSTRUCTION — pause boundary after U1, before U2
 ---
+
+## CONSTRUCTION U2 — Resumed; Functional Design Part 1 presented
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "U2を進めて"
+**AI Response**: "Resumed at U2 LLM Connectivity. Started Functional Design: created construction/plans/U2-llm-functional-design-plan.md with 8 questions (capability detection/tool mode, JSON fallback format, message model, stream chunk kinds, error taxonomy, retry policy, request params). Recommended defaults marked. Awaiting answers."
+**Status**: Functional Design Part 1 questions presented
+**Context**: CONSTRUCTION U2 — Functional Design Part 1
+---
