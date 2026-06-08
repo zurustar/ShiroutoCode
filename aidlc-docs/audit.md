@@ -173,3 +173,12 @@
 **Context**: CONSTRUCTION Phase — U1 Foundation Functional Design complete
 
 ---
+
+## CONSTRUCTION U1 — Functional Design Approved
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "次に進めてください"
+**AI Response**: "U1 Functional Design approved. Proceeding to U1 NFR Requirements. Committing & pushing."
+**Status**: Approved
+**Context**: CONSTRUCTION U1 — Functional Design approved → NFR Requirements
+
+---
