@@ -209,3 +209,18 @@
 **Context**: CONSTRUCTION U1 — NFR Design complete; next Code Generation (Infrastructure Design skipped)
 
 ---
+
+## CONSTRUCTION U1 — NFR Design Approved
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "がんばれ"
+**AI Response**: "U1 NFR Design approved. Proceeding to U1 Code Generation (Part 1 plan, TDD). Committing & pushing."
+**Status**: Approved
+**Context**: CONSTRUCTION U1 — NFR Design approved → Code Generation
+---
+
+## CONSTRUCTION U1 — Code Generation Part 1 (Plan) presented
+**Timestamp**: 2026-06-08T00:00:00Z
+**AI Prompt**: "U1 code generation plan complete (construction/plans/U1-foundation-code-generation-plan.md), 7 TDD steps. Ready to proceed to generation?"
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U1 — Code Generation planning; greenfield Go module, TDD steps (logging+config, test-first, PBT)
+---
