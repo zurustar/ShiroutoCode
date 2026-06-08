@@ -146,3 +146,21 @@
 **Context**: INCEPTION Phase — Units Generation artifacts presented; next is CONSTRUCTION (per-unit loop)
 
 ---
+
+## Units Generation — Approved → CONSTRUCTION
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "はい、進めて"
+**AI Response**: "Units Generation approved. INCEPTION phase complete. Entering CONSTRUCTION phase, per-unit loop starting with U1 Foundation (Functional Design first). Committing & pushing."
+**Status**: Approved
+**Context**: INCEPTION complete → CONSTRUCTION (U1 Foundation)
+
+---
+
+## CONSTRUCTION U1 — Functional Design started + TDD convention recorded
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "/btw TDDで進めてほしいというのを忘れてました"
+**AI Response**: "Recorded TDD (test-first red→green→refactor) as a standing CONSTRUCTION convention in aidlc-state.md and local memory (tdd-construction.md); it complements mandated unit tests + PBT(rapid). Started U1 Foundation Functional Design: created construction/plans/U1-foundation-functional-design-plan.md with 7 questions (config fields/file format/precedence/validation-failure/masking/log output). Functional design frames business rules as testable assertions per TDD."
+**Status**: Convention recorded; Functional Design Part 1 questions presented
+**Context**: CONSTRUCTION Phase — U1 Foundation Functional Design Part 1
+
+---

@@ -4,9 +4,10 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: INCEPTION - Units Generation COMPLETE (awaiting approval). NEXT: CONSTRUCTION (per-unit loop, starting U1 Foundation)
-- **Session Note**: Units decomposition answered 2026-06-08 (all recommended: 5 units U1-U5, order U1→U5, unit-test/PBT-green completion). Artifacts at inception/application-design/unit-of-work*.md. Awaiting approval before CONSTRUCTION.
+- **Current Stage**: CONSTRUCTION - U1 Foundation / Functional Design IN PROGRESS (Part 1 plan/questions)
+- **Session Note**: INCEPTION complete & approved 2026-06-08. CONSTRUCTION per-unit loop started at U1 Foundation. Functional Design plan at construction/plans/U1-foundation-functional-design-plan.md.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
+- **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
 
 ## Execution Plan Summary
 - **Stages to Execute**: Application Design, Units Planning, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
@@ -35,15 +36,17 @@
 - [x] Workflow Planning (approved)
 - [x] Application Design — EXECUTE (approved)
 - [x] Units Planning — EXECUTE (approved)
-- [x] Units Generation — EXECUTE (awaiting approval)  ← NEXT: CONSTRUCTION
+- [x] Units Generation — EXECUTE (approved)
 
-### 🟢 CONSTRUCTION PHASE
-- [ ] Functional Design — EXECUTE
+### 🟢 CONSTRUCTION PHASE (per-unit loop; convention: TDD)
+**U1 Foundation** ← CURRENT
+- [ ] Functional Design — EXECUTE  ← IN PROGRESS
 - [ ] NFR Requirements — EXECUTE
 - [ ] NFR Design — EXECUTE
 - [ ] Infrastructure Design — SKIP (local-only, no cloud infra)
-- [ ] Code Generation — EXECUTE
-- [ ] Build and Test — EXECUTE
+- [ ] Code Generation — EXECUTE (TDD)
+- [ ] (then U2 → U3 → U4 → U5, same per-unit stages)
+- [ ] Build and Test — EXECUTE (after all units)
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
