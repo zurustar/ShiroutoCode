@@ -119,3 +119,12 @@
 **Context**: Doc hygiene — removed redundant manual backups; rely on git history.
 
 ---
+
+## Application Design — Answers Collected & Artifacts Generated
+**Timestamp**: 2026-06-08T00:00:00Z
+**User Input**: "done" (filled [Answer] tags in application-design-plan.md: Q1=A, Q2=C, Q3=C, Q4=B, Q5=A, Q6=A [clarified: the 'multiple PCs' trait was the implementer's, not end-user P1; end-user shares state via git-committed files, so in-memory only suffices], Q7=A, Q8=C, Q9=blank/defaults)
+**AI Response**: "Analyzed answers — all unambiguous; no follow-ups needed. Corrected personas.md (removed misattributed 'multiple PCs' end-user trait per Q6 clarification). Chose Q9 defaults: module github.com/zurustar/shiroutocode, binary shiroutocode, standard flag for MVP (SECURITY-10). Generated Application Design artifacts: components.md (7 components, layered), component-methods.md (Go interface sketches incl. Frontend Port), services.md (Session/ToolDispatcher/LLMService/Confirmation), component-dependency.md (matrix + Mermaid data flow), application-design.md (consolidated + extension compliance). Marked plan checkboxes [x]. Awaiting approval before Units Generation."
+**Status**: Awaiting Approval
+**Context**: INCEPTION Phase — Application Design artifacts presented for review
+
+---

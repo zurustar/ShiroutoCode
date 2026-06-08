@@ -4,8 +4,8 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: INCEPTION - Application Design IN PROGRESS (Part 1: design plan/questions awaiting answers)
-- **Session Note**: Workflow Planning approved 2026-06-08. Execution plan at inception/plans/execution-plan.md. Now in Application Design; design-plan questions at inception/plans/application-design-plan.md awaiting [Answer]: tags.
+- **Current Stage**: INCEPTION - Application Design COMPLETE (awaiting approval). NEXT: Units Planning / Units Generation
+- **Session Note**: Application Design Q&A answered 2026-06-08 (Q1=A,Q2=C,Q3=C,Q4=B,Q5=A,Q6=A,Q7=A,Q8=C,Q9=defaults). Artifacts generated at inception/application-design/. Awaiting approval before Units Generation.
 
 ## Execution Plan Summary
 - **Stages to Execute**: Application Design, Units Planning, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
@@ -32,8 +32,8 @@
 - [x] Requirements Analysis (approved)
 - [x] User Stories (approved)
 - [x] Workflow Planning (approved)
-- [ ] Application Design — EXECUTE  ← IN PROGRESS
-- [ ] Units Planning — EXECUTE
+- [x] Application Design — EXECUTE (awaiting approval)
+- [ ] Units Planning — EXECUTE  ← NEXT
 - [ ] Units Generation — EXECUTE
 
 ### 🟢 CONSTRUCTION PHASE
