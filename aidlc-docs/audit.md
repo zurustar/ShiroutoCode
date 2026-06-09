@@ -318,3 +318,11 @@
 **Status**: Awaiting Approval
 **Context**: CONSTRUCTION U2 — Code Generation planning; TDD, mock HTTP, no new deps
 ---
+
+## CONSTRUCTION U2 — Code Generation Complete (TDD, all green)
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "Approve & Generate"
+**AI Response**: "Executed U2 code generation Part 2 via TDD. Created internal/llm: types.go, errors.go, sse.go, jsonfallback.go, client.go + 4 test files. Hybrid tool calling (auto function->json fallback), SSE streaming with idle timeout, typed chunks, retry on retryable kinds, classified errors. Final: go build OK; go test ./... PASS (17 llm tests incl 4 PBT: JSON roundtrip R3, text reconstruction R4, tool_call assembly R5, no-leak R6); -race clean; gofmt/vet clean. No new external deps. Summaries at construction/U2-llm/code/. Marked all plan checkboxes [x]. Awaiting approval before U3."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U2 — Code Generation done; next unit U3 Tools & Guardrail
+---

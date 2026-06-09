@@ -22,22 +22,22 @@ internal/llm/
 
 ## 生成ステップ（TDD・順次）
 
-### [ ] Step 1: 型定義（types.go）
+### [x] Step 1: 型定義（types.go）
 - ドメイン型（domain-entities準拠）と `Client`/`Stream` インタフェース。実装前の土台（コンパイル用最小）。
 
-### [ ] Step 2: エラー分類 — テスト先行→実装（errors.go）
+### [x] Step 2: エラー分類 — テスト先行→実装（errors.go）
 - RED: `classifyError` の単体（refused/timeout/404/4xx/5xx/BadStream/Decode）+ PBT（UserMessageに機微情報が出ない, R6）。
 - GREEN: `LLMError`, `ErrorKind`, `classifyError` 実装（P4）。
 
-### [ ] Step 3: SSE — テスト先行→実装（sse.go）
+### [x] Step 3: SSE — テスト先行→実装（sse.go）
 - RED: `sseReader`（data連結/コメント/空行/[DONE]）単体；`streamImpl` の Chunk 変換；**PBT**: text分割→TextDelta連結＝元文字列（R4保存則）、tool_call断片結合（R5）。
 - GREEN: `sseReader`/`streamImpl` 実装（P3、idleタイマ P1）。
 
-### [ ] Step 4: JSONフォールバック — テスト先行→実装（jsonfallback.go）
+### [x] Step 4: JSONフォールバック — テスト先行→実装（jsonfallback.go）
 - RED: **PBT** 整形JSON（tool/args or final）の往復パース（R3）；不正→Decode。
 - GREEN: `jsonToolParser` 実装。
 
-### [ ] Step 5: Client・組立・リトライ・モード — テスト先行→実装（client.go）
+### [x] Step 5: Client・組立・リトライ・モード — テスト先行→実装（client.go）
 - RED（httptestモック）:
   - リクエスト組立: functionモードのみ tools 送信、temperature/max_tokens 省略条件（R1）
   - SSEストリーミングで TextDelta 逐次（P1/US-2.2）
@@ -46,10 +46,10 @@ internal/llm/
   - タイムアウト（全体/アイドル）発火（P1）
 - GREEN: `requestBuilder`/`modeResolver`/`retrier`/`Complete` 実装。
 
-### [ ] Step 6: コード要約ドキュメント
+### [x] Step 6: コード要約ドキュメント
 - `aidlc-docs/construction/U2-llm/code/code-summary.md` / `test-summary.md`
 
-### [ ] Step 7: ローカル検証
+### [x] Step 7: ローカル検証
 - `go build ./...` + `go test ./...`（rapid含む）green を確認。`gofmt`/`go vet` クリーン。
 
 ### API/Repository/Frontend/DB/デプロイ
