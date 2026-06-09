@@ -334,3 +334,11 @@
 **Status**: Approved
 **Context**: CONSTRUCTION U2 done → U3 Tools & Guardrail
 ---
+
+## CONSTRUCTION U3 — Functional Design Complete
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended (Q1=A search/replace+full edits, Q2=A Allow/Confirm/Deny, Q3=A symlink-resolved workspace containment, Q4=A command denylist/confirmlist, Q5=A git force/hard/history-rewrite gating, Q6=A web GET/http(s)-only, Q7=A Confirmer DI + non-interactive=deny, Q8=A fail-close). Generated U3 functional design: domain-entities.md (Tool/ToolResult/Action/Decision/Evaluator/Confirmer/ToolDispatcher/Registry), business-rules.md (R1-R10 testable + PBT), business-logic-model.md (Dispatch/Evaluate/edit/terminal/git/web flows, TDD test table, extension compliance). Marked checkboxes [x]. Awaiting approval before U3 NFR Requirements."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U3 — Functional Design complete (safety core)
+---

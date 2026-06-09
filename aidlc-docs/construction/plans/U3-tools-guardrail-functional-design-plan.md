@@ -9,10 +9,10 @@
 > 各 `[Answer]:` に記入。「おまかせ」で推奨採用。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U3-tools-guardrail/functional-design/domain-entities.md`
-- [ ] `construction/U3-tools-guardrail/functional-design/business-rules.md`（ツール契約・ガードレール判定・スコープ・denylist。テスト可能な表明 + PBT候補）
-- [ ] `construction/U3-tools-guardrail/functional-design/business-logic-model.md`（Dispatchフロー・各ツール・確認・フェイルクローズ）
-- [ ] 設計整合性検証（Security Baseline 反映確認）
+- [x] `construction/U3-tools-guardrail/functional-design/domain-entities.md`
+- [x] `construction/U3-tools-guardrail/functional-design/business-rules.md`（ツール契約・ガードレール判定・スコープ・denylist。テスト可能な表明 + PBT候補）
+- [x] `construction/U3-tools-guardrail/functional-design/business-logic-model.md`（Dispatchフロー・各ツール・確認・フェイルクローズ）
+- [x] 設計整合性検証（Security Baseline 反映確認）
 
 ---
 
@@ -24,7 +24,7 @@
 - **C**: 常にフル書換のみ（最小）
 - **D**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -33,7 +33,7 @@
 - **B**: Allow/Block の2値のみ
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -42,7 +42,7 @@
 - **B**: 文字列プレフィックス一致のみ（簡易・リンク回避に弱い）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -52,7 +52,7 @@
 - **B**: 最小限（`rm -rf /` 等の即死系のみ）
 - **C**: その他（自由記述）
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -61,7 +61,7 @@
 - **B**: 全Git操作 Allow（MVP簡素）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -70,7 +70,7 @@
 - **B**: GET/POST 両対応
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -79,7 +79,7 @@
 - **A**: **`Confirmer` インタフェース**（`Confirm(ctx, action, reason) (bool, error)`）を U3 で定義し DI。**非対話(非TTY/CI)時は確認不能 → 安全側で Deny 相当に倒す**（フェイルクローズ）【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -87,11 +87,11 @@
 - **A**: **判定中のエラー/未知の操作種別/スコープ判定不能 → Allowにしない（Confirm か Deny）。ツール実行失敗は中間状態を残さないよう努め、失敗を明示して停止/再判断**【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q9. その他（任意）
 ツール名の規約、Webの取得サイズ上限、ターミナルのシェル(`sh -c`)利用可否、追加で塞ぎたい操作など。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）
