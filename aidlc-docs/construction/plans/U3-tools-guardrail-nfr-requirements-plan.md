@@ -4,8 +4,8 @@
 **早見**: Scalability/Availability=N/A。**Security が支配的NFR**（ガードレール＝中核、大半は Functional R1-R10 で定義済。本ステージで網羅性を確認）。Performance/Reliability/Maintainability は軽〜中。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U3-tools-guardrail/nfr-requirements/nfr-requirements.md`
-- [ ] `construction/U3-tools-guardrail/nfr-requirements/tech-stack-decisions.md`
+- [x] `construction/U3-tools-guardrail/nfr-requirements/nfr-requirements.md`
+- [x] `construction/U3-tools-guardrail/nfr-requirements/tech-stack-decisions.md`
 
 ---
 
@@ -16,7 +16,7 @@
 - **B**: 常に `sh -c`
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -25,7 +25,7 @@
 - **B**: タイムアウトなし（MVP簡素）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -34,7 +34,7 @@
 - **B**: go-git 等のライブラリ（依存増）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -43,7 +43,7 @@
 - **B**: ハードコードのみ
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -51,11 +51,11 @@
 - **A**: **判定はO(ルール数)で軽量、実行前に都度評価。ファイル/コマンドI/OがボトルネックでありMVPで追加最適化なし**【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q6. その他（任意）
 出力サイズ上限値、HTTPリダイレクト最大数、git実行のenv（認証）方針など。
 
-[Answer]:
+[Answer]: 特になし（おまかせ）

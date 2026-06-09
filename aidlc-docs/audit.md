@@ -350,3 +350,11 @@
 **Status**: Approved
 **Context**: CONSTRUCTION U3 — Functional Design approved → NFR Requirements
 ---
+
+## CONSTRUCTION U3 — NFR Requirements Complete
+**Timestamp**: 2026-06-09T00:00:00Z
+**User Input**: "おまかせ"
+**AI Response**: "All recommended. Generated nfr-requirements.md (security-dominant: single interceptor, scope containment, denylist, non-interactive fail-close, input validation; perf light; reliability timeouts; maintainability data-driven denylist) + tech-stack-decisions.md (os/exec, git CLI, net/http, EvalSymlinks; no new Go deps; default timeout 120s, output cap 1MiB). Marked checkboxes [x]. Awaiting approval before U3 NFR Design."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U3 — NFR Requirements complete
+---
