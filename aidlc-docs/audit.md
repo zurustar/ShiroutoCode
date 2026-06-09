@@ -389,3 +389,11 @@
 **Status**: Awaiting Approval
 **Context**: CONSTRUCTION U3 — Code Generation planning; TDD, no new deps (git CLI), largest unit
 ---
+
+## CONSTRUCTION U3 — Code Generation Complete (TDD, all green)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "Approve & Generate"
+**AI Response**: "Executed U3 code generation Part 2 via TDD. internal/tools (tool/file/terminal/git/web) + internal/guardrail (types/scope/rules/evaluator/dispatcher). Single interceptor, symlink-resolved scope, command/git/web denylist, process-group kill, atomic writes, non-interactive fail-close. Final: go build OK; go test ./... PASS (23 U3 tests incl 4 PBT: scope R3, denylist R4, git R6, dispatch R2/R8); -race clean; gofmt/vet clean. No new Go deps (uses git CLI). Summaries at construction/U3-tools-guardrail/code/. Marked all plan checkboxes [x]. Awaiting approval before U4."
+**Status**: Awaiting Approval
+**Context**: CONSTRUCTION U3 done; next unit U4 Agent Engine
+---
