@@ -3,8 +3,8 @@
 **Unit**: U3。規約: TDD + PBT(rapid)。安全パターンの具体化が主。
 
 ## 1. 生成プラン（Part 2で実施）
-- [ ] `construction/U3-tools-guardrail/nfr-design/nfr-design-patterns.md`
-- [ ] `construction/U3-tools-guardrail/nfr-design/logical-components.md`
+- [x] `construction/U3-tools-guardrail/nfr-design/nfr-design-patterns.md`
+- [x] `construction/U3-tools-guardrail/nfr-design/logical-components.md`
 
 ---
 
@@ -14,7 +14,7 @@
 - **A**: **`resolveWithin(root, target)`: 絶対化→Clean→`EvalSymlinks`（存在する祖先まで）→`root` 配下か判定。新規作成パスは「存在する最深の親」を解決して判定**。判定不能はエラー＝非許可【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -23,7 +23,7 @@
 - **B**: switch文の直書き
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -32,7 +32,7 @@
 - **B**: 単純な `CommandContext` のみ（孫プロセス残存の可能性）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -41,7 +41,7 @@
 - **B**: 直接上書き（簡素）
 - **C**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
@@ -49,10 +49,10 @@
 - **A**: **`ToolDispatcher` が Registry/Evaluator/Confirmer/Logger を保持する単一型**。Tool は Dispatcher 経由でのみ実行（公開APIを絞る）【推奨】
 - **B**: その他
 
-[Answer]:
+[Answer]: A（おまかせ）
 
 ---
 
 ### Q6. その他（任意）
 
-[Answer]:
+[Answer]: 特になし（おまかせ）
