@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U3 Tools & Guardrail / NFR Requirements COMPLETE (awaiting approval). NEXT: U3 NFR Design
+- **Current Stage**: CONSTRUCTION - U3 Tools & Guardrail / NFR Design IN PROGRESS (Part 1 plan/questions)
 - **Session Note**: Resumed 2026-06-09. U1 done. U2 functional design generated (all recommended): hybrid tool calling (toolMode auto), single-JSON fallback, SSE chunk kinds, error taxonomy, retry policy. Artifacts at construction/U2-llm/functional-design/.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -55,8 +55,8 @@
 
 **U3 Tools & Guardrail** ← CURRENT (largest unit; safety core)
 - [x] Functional Design — EXECUTE (approved)
-- [x] NFR Requirements — EXECUTE (awaiting approval)
-- [ ] NFR Design — EXECUTE  ← NEXT
+- [x] NFR Requirements — EXECUTE (approved)
+- [ ] NFR Design — EXECUTE  ← IN PROGRESS
 - [ ] Infrastructure Design — SKIP
 - [ ] Code Generation — EXECUTE (TDD)
 - [ ] (then U4 → U5, same per-unit stages)
