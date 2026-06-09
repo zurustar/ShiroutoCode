@@ -48,6 +48,7 @@ type Result struct {
 	Summary      string
 	ChangedFiles []string
 	Steps        int
+	Err          error // underlying cause when Status == Failed (e.g. *llm.LLMError)
 }
 
 // Frontend receives progress events (implemented by U5; default is no-op).
@@ -173,7 +174,7 @@ func (r *Runner) failOrAbort(ctx context.Context, err error, changed []string, s
 		return Result{Status: Aborted, ChangedFiles: changed, Steps: step - 1}
 	}
 	r.logger.Error("agent: llm error", "step", step)
-	return Result{Status: Failed, ChangedFiles: changed, Steps: step - 1}
+	return Result{Status: Failed, ChangedFiles: changed, Steps: step - 1, Err: err}
 }
 
 // discard drops log output (default sink).

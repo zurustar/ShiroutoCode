@@ -412,3 +412,18 @@
 **Status**: U4 Complete
 **Context**: CONSTRUCTION U4 done → next U5 CLI Frontend (final unit)
 ---
+
+## CONSTRUCTION U5 — Started (goal: complete U5)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "/goal UA5完走"
+**AI Response**: "Goal: complete all U5 CLI Frontend stages autonomously (recommended defaults). U5 wires U1-U4, implements agent.Frontend + guardrail.Confirmer, bubbletea TUI (REPL) + plain single-shot, cmd/shiroutocode main. Starting design docs."
+**Status**: Goal active
+**Context**: CONSTRUCTION U5 (final unit) autonomous completion
+---
+
+## CONSTRUCTION U5 — All stages complete (autonomous per goal); ALL UNITS DONE
+**Timestamp**: 2026-06-10T00:00:00Z
+**AI Response**: "Completed U5 CLI Frontend per goal 'UA5完走'. cmd/shiroutocode + internal/cli: BuildCore wiring (U1-U4), plainFrontend (single-shot), promptConfirmer, bubbletea TUI (REPL) with teaFrontend/teaConfirmer, mode selection, US-6.1 connection-error messaging. Added agent.Result.Err. Tests: go test ./... PASS (13 CLI tests incl 1 PBT parseYes + single-shot/connection-error integration + TUI Update transitions); -race clean; gofmt/vet clean. Built single binary (~10MB); smoke verified: missing model -> exit2, LM Studio down -> connection guidance + exit!=0 (US-6.1 end-to-end). Real LLM multi-file E2E deferred to manual/Build-and-Test (LM Studio not running here). ALL CONSTRUCTION UNITS U1-U5 complete. Goal met."
+**Status**: U5 Complete; all units done
+**Context**: CONSTRUCTION complete (units) → Build and Test stage remains
+---

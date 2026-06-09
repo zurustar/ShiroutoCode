@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U4 Agent Engine COMPLETE (all stages, code green, committed). NEXT: U5 CLI Frontend (final unit)
+- **Current Stage**: CONSTRUCTION - ALL UNITS (U1-U5) COMPLETE. Binary builds, all tests green & race-clean. NEXT: Build and Test stage (then OPERATIONS placeholder)
 - **Session Note**: Resumed 2026-06-09. U1 done. U2 functional design generated (all recommended): hybrid tool calling (toolMode auto), single-JSON fallback, SSE chunk kinds, error taxonomy, retry policy. Artifacts at construction/U2-llm/functional-design/.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -67,9 +67,12 @@
 - [x] Infrastructure Design — SKIP
 - [x] Code Generation — DONE: internal/agent (Runner loop, Frontend port), 6 tests green incl 1 PBT (termination), race-clean
 
-**U5 CLI Frontend** ← NEXT (final unit: bubbletea TUI + single-shot, wires all units, E2E)
-- [ ] Functional Design → NFR Req → NFR Design → [Infra SKIP] → Code Gen (TDD)
-- [ ] Build and Test — EXECUTE (after U5)
+**U5 CLI Frontend** (DONE — final unit)
+- [x] Functional Design / NFR Req / NFR Design (consolidated, auto-approved via goal)
+- [x] Infrastructure Design — SKIP
+- [x] Code Generation — DONE: cmd/shiroutocode + internal/cli (BuildCore wiring, plainFrontend, promptConfirmer, bubbletea TUI), 13 CLI tests green incl 1 PBT, race-clean. Binary builds; smoke verified (config error, US-6.1 connection error).
+
+**Build and Test** ← NEXT (build/unit/integration/PBT instructions; real LM Studio E2E manual)
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
