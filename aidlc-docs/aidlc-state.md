@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - U3 Tools & Guardrail / Code Generation COMPLETE (awaiting approval). NEXT: U4 Agent Engine (Functional Design)
+- **Current Stage**: CONSTRUCTION - U4 Agent Engine COMPLETE (all stages, code green, committed). NEXT: U5 CLI Frontend (final unit)
 - **Session Note**: Resumed 2026-06-09. U1 done. U2 functional design generated (all recommended): hybrid tool calling (toolMode auto), single-JSON fallback, SSE chunk kinds, error taxonomy, retry policy. Artifacts at construction/U2-llm/functional-design/.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -60,10 +60,16 @@
 - [x] Infrastructure Design — SKIP
 - [x] Code Generation — EXECUTE (TDD) — DONE: internal/tools + internal/guardrail, 23 tests green incl 4 PBT, race-clean (awaiting approval)
 
-**U4 Agent Engine** ← CURRENT
+**U4 Agent Engine** (DONE)
+- [x] Functional Design (auto-approved via goal)
+- [x] NFR Requirements (auto)
+- [x] NFR Design (auto)
+- [x] Infrastructure Design — SKIP
+- [x] Code Generation — DONE: internal/agent (Runner loop, Frontend port), 6 tests green incl 1 PBT (termination), race-clean
+
+**U5 CLI Frontend** ← NEXT (final unit: bubbletea TUI + single-shot, wires all units, E2E)
 - [ ] Functional Design → NFR Req → NFR Design → [Infra SKIP] → Code Gen (TDD)
-- [ ] (then U5)
-- [ ] Build and Test — EXECUTE (after all units)
+- [ ] Build and Test — EXECUTE (after U5)
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER

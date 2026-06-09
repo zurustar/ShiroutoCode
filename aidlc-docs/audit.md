@@ -397,3 +397,18 @@
 **Status**: Awaiting Approval
 **Context**: CONSTRUCTION U3 done; next unit U4 Agent Engine
 ---
+
+## CONSTRUCTION U3 — Code Generation Approved → U4 (goal: complete U4)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "/goal U4完走して"
+**AI Response**: "U3 Code Generation approved (implicit via goal to proceed). U3 complete. Goal set: complete all U4 Agent Engine stages autonomously using recommended defaults, committing per stage. Starting U4 Functional Design."
+**Status**: Approved / Goal active
+**Context**: CONSTRUCTION U3 done → U4 Agent Engine (autonomous completion)
+---
+
+## CONSTRUCTION U4 — All stages complete (autonomous per goal)
+**Timestamp**: 2026-06-10T00:00:00Z
+**AI Response**: "Completed U4 Agent Engine end-to-end per goal 'U4完走して' using recommended defaults: Functional Design (loop rules R1-R7, Frontend port), NFR Requirements (termination/fail-close, no new deps), NFR Design (P1 termination, P2 cancel, P3 streaming, P4 fail-close, P5 DI), Code Generation (internal/agent Runner + conversation; added llm.CollectStreaming). Tests: go test ./... PASS (6 agent tests incl 1 PBT termination); -race clean; gofmt/vet clean. Loop guaranteed to terminate (completion/maxSteps/cancel); tools only via U3 Dispatcher. All docs + code committed. Goal met."
+**Status**: U4 Complete
+**Context**: CONSTRUCTION U4 done → next U5 CLI Frontend (final unit)
+---

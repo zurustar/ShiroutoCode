@@ -255,7 +255,12 @@ func orDefault(s, def string) string {
 
 // Collect consumes a Stream fully into a CompletionResult, assembling tool
 // calls and, in JSON mode, parsing the single-JSON fallback protocol.
-func Collect(s Stream) (CompletionResult, error) {
+func Collect(s Stream) (CompletionResult, error) { return CollectStreaming(s, nil) }
+
+// CollectStreaming is like Collect but invokes onText (if non-nil) with each
+// text delta as it arrives, enabling incremental display while still returning
+// the aggregated result.
+func CollectStreaming(s Stream, onText func(string)) (CompletionResult, error) {
 	var res CompletionResult
 	var text strings.Builder
 	var deltas []ToolCallDelta
@@ -269,6 +274,9 @@ func Collect(s Stream) (CompletionResult, error) {
 		}
 		switch c.Kind {
 		case ChunkText:
+			if onText != nil {
+				onText(c.Text)
+			}
 			text.WriteString(c.Text)
 		case ChunkToolCall:
 			if c.ToolCallDelta != nil {
