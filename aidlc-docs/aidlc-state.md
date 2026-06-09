@@ -4,7 +4,7 @@
 - **Project Name**: ShiroutoCode
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-06T00:00:00Z
-- **Current Stage**: CONSTRUCTION - ALL UNITS (U1-U5) COMPLETE. Binary builds, all tests green & race-clean. NEXT: Build and Test stage (then OPERATIONS placeholder)
+- **Current Stage**: CONSTRUCTION COMPLETE — all units + Build and Test done (74 tests green, 72.6% cov, binary builds). NEXT: OPERATIONS (placeholder) / optional manual LM Studio E2E. Awaiting Build-and-Test approval.
 - **Session Note**: Resumed 2026-06-09. U1 done. U2 functional design generated (all recommended): hybrid tool calling (toolMode auto), single-JSON fallback, SSE chunk kinds, error taxonomy, retry policy. Artifacts at construction/U2-llm/functional-design/.
 - **Units**: U1 Foundation(config,log) → U2 LLM → U3 Tools&Guardrail → U4 Agent → U5 CLI(integration+E2E)
 - **Dev Convention**: TDD (test-first: red→green→refactor) across CONSTRUCTION, combined with mandated unit tests + PBT (rapid). User requested 2026-06-08.
@@ -72,7 +72,14 @@
 - [x] Infrastructure Design — SKIP
 - [x] Code Generation — DONE: cmd/shiroutocode + internal/cli (BuildCore wiring, plainFrontend, promptConfirmer, bubbletea TUI), 13 CLI tests green incl 1 PBT, race-clean. Binary builds; smoke verified (config error, US-6.1 connection error).
 
-**Build and Test** ← NEXT (build/unit/integration/PBT instructions; real LM Studio E2E manual)
+**Build and Test** (DONE)
+- [x] Instructions (build/unit/integration/e2e/security) + summary generated
+- [x] Makefile + GitHub Actions CI added
+- [x] Verified: go build ./... OK, go test ./... -race PASS (74 tests), 72.6% coverage, binary builds
+- [ ] Manual real-LM-Studio E2E (US-3.1 multi-file edit) — pending live model
+
+### 🟡 OPERATIONS PHASE
+- [ ] Operations — PLACEHOLDER (future: GitHub Releases binary distribution / go install)
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER

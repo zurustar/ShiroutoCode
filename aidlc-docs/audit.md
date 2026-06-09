@@ -427,3 +427,15 @@
 **Status**: U5 Complete; all units done
 **Context**: CONSTRUCTION complete (units) → Build and Test stage remains
 ---
+
+## Build and Test Stage
+**Timestamp**: 2026-06-10T00:00:00Z
+**Build Status**: Success (go build ./...; single binary bin/shiroutocode ~10MB; make build verified)
+**Test Status**: Pass (74 test functions, 0 failures, -race clean, gofmt/vet clean, 72.6% coverage)
+**Files Generated**:
+- build-instructions.md / unit-test-instructions.md / integration-test-instructions.md
+- e2e-test-instructions.md / security-test-instructions.md / build-and-test-summary.md
+- (root) Makefile, .github/workflows/ci.yml
+**Note**: Real LM Studio E2E (US-3.1) deferred to manual (no live model in sandbox); connection-error path (US-6.1) verified on real binary. CONSTRUCTION complete. Operations remains a placeholder.
+
+---
