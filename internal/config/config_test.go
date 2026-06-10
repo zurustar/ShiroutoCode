@@ -149,6 +149,49 @@ func TestZeroValueDistinctFromUnset(t *testing.T) {
 	}
 }
 
+// extraDenyPatterns must load from a config file into the guardrail policy.
+// Project file overrides home file (consistent with other keys).
+func TestExtraDenyPatternsFromYAML(t *testing.T) {
+	o := baseOpts()
+	o.Env = map[string]string{"SHIROUTO_MODEL": "m"}
+	o.ReadFile = func(path string) ([]byte, error) {
+		switch {
+		case strings.HasSuffix(path, ".shiroutocode.yaml"): // project
+			return []byte("extraDenyPatterns:\n  - \"rm -rf /\"\n  - \":(){:|:&};:\"\n"), nil
+		case strings.HasSuffix(path, "config.yaml"): // home
+			return []byte("extraDenyPatterns:\n  - \"home-only\"\n"), nil
+		}
+		return nil, fs.ErrNotExist
+	}
+	cfg, err := Load(o)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	got := cfg.Guardrail.ExtraDenyPatterns
+	want := []string{"rm -rf /", ":(){:|:&};:"}
+	if len(got) != len(want) {
+		t.Fatalf("extraDenyPatterns = %#v, want %#v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Errorf("extraDenyPatterns[%d] = %q, want %q", i, got[i], want[i])
+		}
+	}
+}
+
+// Absent extraDenyPatterns leaves the guardrail policy with none.
+func TestExtraDenyPatternsDefaultEmpty(t *testing.T) {
+	o := baseOpts()
+	o.Env = map[string]string{"SHIROUTO_MODEL": "m"}
+	cfg, err := Load(o)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(cfg.Guardrail.ExtraDenyPatterns) != 0 {
+		t.Errorf("expected no deny patterns by default, got %#v", cfg.Guardrail.ExtraDenyPatterns)
+	}
+}
+
 // R5: defaults carry no secrets.
 func TestDefaultsHaveNoSecrets(t *testing.T) {
 	d := defaults("/ws")

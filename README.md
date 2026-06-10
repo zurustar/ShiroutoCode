@@ -109,9 +109,11 @@ shiroutocode --model <モデル名> "<指示>"
 | ログ形式 | `--log-format` | `SHIROUTO_LOG_FORMAT` | `logFormat` | `text` |
 | ログ出力先ファイル | `--log-file` | `SHIROUTO_LOG_FILE` | `logFile` | （標準エラー） |
 | 確認モード | — | — | `confirmMode` | `prompt` |
+| 追加の拒否パターン | — | — | `extraDenyPatterns` | （なし） |
 
 - **`toolMode`**: `auto`（モデルのネイティブ関数呼び出しを優先し、非対応なら単一JSONにフォールバック）/ `function`（関数呼び出し固定）/ `json`（単一JSON固定）。関数呼び出しに対応しないモデルでは `json` を試してください。
 - **`confirmMode`**: `prompt`（危険操作を確認）/ `deny`（確認せず一律拒否）。現状は設定ファイルでのみ指定できます。
+- **`extraDenyPatterns`**: 組み込みの拒否ルールに加えて、コマンドに対する独自の拒否パターン（正規表現）を追加します。設定ファイルでのみ指定でき、プロジェクト設定がホーム設定を上書きします（不正な正規表現は無視され、起動時に警告します）。
 
 ### 設定ファイルの例
 
@@ -123,6 +125,8 @@ model: google/gemma-4-12b
 maxSteps: 25
 toolMode: auto
 confirmMode: prompt
+extraDenyPatterns:
+  - "rm -rf /"
 logLevel: info
 ```
 
@@ -141,7 +145,7 @@ logLevel: info
 ShiroutoCode は自律的にファイル編集やコマンド実行を行うため、安全制御を中核に据えています。
 
 - **ワークスペース封じ込め** — 読み書きはワークスペース配下に限定。シンボリックリンクを解決した上で境界を判定し、外部への書き込み/削除は拒否します。
-- **危険操作の確認/拒否** — 危険なコマンドやパターンは実行前に確認を求める（`prompt`）か拒否（`deny`）します。
+- **危険操作の確認/拒否** — 危険なコマンドやパターンは実行前に確認を求める（`prompt`）か拒否（`deny`）します。`extraDenyPatterns` で独自の拒否パターンを追加できます。
 - **`.git/` 保護** — リポジトリ内部（特に `.git/hooks` 経由の任意コード実行）への書き込みは確認対象。`git --global/--system` や `hooksPath`、`git -c`、`--exec-path` など副作用の大きい操作も確認対象です。
 - **SSRF対策** — `web_fetch` はループバック/リンクローカル/プライベート/クラウドメタデータ宛先をブロックします（リダイレクト先も対象）。
 - **フェイルクローズ** — 設定の検証失敗時は起動を中止。非対話実行で確認できない危険操作は安全側に倒します。
