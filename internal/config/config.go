@@ -65,6 +65,9 @@ type partial struct {
 	LogFile     *string `yaml:"logFile"`
 	ConfirmMode *string `yaml:"confirmMode"`
 	ToolMode    *string `yaml:"toolMode"`
+	// ExtraDenyPatterns is list-valued, so a nil slice (key absent) means
+	// "unset" and a present overlay replaces the prior value (R1 semantics).
+	ExtraDenyPatterns []string `yaml:"extraDenyPatterns"`
 }
 
 func defaults(workingDir string) Config {
@@ -293,6 +296,9 @@ func overlay(cfg *Config, p partial) {
 	}
 	if p.ToolMode != nil {
 		cfg.ToolMode = *p.ToolMode
+	}
+	if p.ExtraDenyPatterns != nil {
+		cfg.Guardrail.ExtraDenyPatterns = p.ExtraDenyPatterns
 	}
 }
 
