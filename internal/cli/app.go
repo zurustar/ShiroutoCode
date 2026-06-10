@@ -50,6 +50,6 @@ func (c *Core) newRunner(fe agent.Frontend, confirmer guardrail.Confirmer) *agen
 		agent.WithFrontend(fe),
 		agent.WithLogger(c.logger),
 		agent.WithMaxSteps(c.cfg.MaxSteps),
-		agent.WithToolMode(llm.ToolModeAuto),
+		agent.WithToolMode(llm.ToolMode(c.cfg.ToolMode)),
 	)
 }

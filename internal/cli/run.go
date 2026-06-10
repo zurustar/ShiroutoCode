@@ -60,7 +60,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer, stdin io.
 func extractPrompt(args []string, stderr io.Writer) (string, error) {
 	fs := flag.NewFlagSet("shiroutocode", flag.ContinueOnError)
 	fs.SetOutput(stderr)
-	for _, name := range []string{"endpoint", "model", "workspace", "log-level", "log-format", "log-file", "max-steps", "confirm-mode"} {
+	for _, name := range []string{"endpoint", "model", "workspace", "log-level", "log-format", "log-file", "max-steps", "confirm-mode", "tool-mode"} {
 		fs.String(name, "", "")
 	}
 	if err := fs.Parse(args); err != nil {

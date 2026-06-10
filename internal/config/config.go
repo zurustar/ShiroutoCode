@@ -39,6 +39,7 @@ type Config struct {
 	LogLevel  string
 	LogFormat string
 	LogFile   string
+	ToolMode  string // auto | function | json (hybrid tool-calling, FR-2/Q2)
 }
 
 // Options carries the loader inputs. The zero value is filled with OS-backed
@@ -63,6 +64,7 @@ type partial struct {
 	LogFormat   *string `yaml:"logFormat"`
 	LogFile     *string `yaml:"logFile"`
 	ConfirmMode *string `yaml:"confirmMode"`
+	ToolMode    *string `yaml:"toolMode"`
 }
 
 func defaults(workingDir string) Config {
@@ -74,6 +76,7 @@ func defaults(workingDir string) Config {
 		LogLevel:  "info",
 		LogFormat: "text",
 		LogFile:   "",
+		ToolMode:  "auto",
 		Guardrail: GuardrailPolicy{ConfirmMode: "prompt", NonInteractivePolicy: "stop"},
 	}
 }
@@ -178,6 +181,9 @@ func readEnv(env map[string]string) (partial, error) {
 	if v, ok := env["SHIROUTO_LOG_FILE"]; ok {
 		p.LogFile = strptr(v)
 	}
+	if v, ok := env["SHIROUTO_TOOL_MODE"]; ok {
+		p.ToolMode = strptr(v)
+	}
 	if v, ok := env["SHIROUTO_MAX_STEPS"]; ok {
 		n, err := strconv.Atoi(strings.TrimSpace(v))
 		if err != nil {
@@ -204,6 +210,7 @@ func readFlags(args []string) (partial, error) {
 	logLevel := get("-log-level")
 	logFormat := get("-log-format")
 	logFile := get("-log-file")
+	toolMode := get("-tool-mode")
 	maxSteps := get("-max-steps")
 
 	i := 0
@@ -246,6 +253,9 @@ func readFlags(args []string) (partial, error) {
 	if *logFile != "" {
 		p.LogFile = strptr(*logFile)
 	}
+	if *toolMode != "" {
+		p.ToolMode = strptr(*toolMode)
+	}
 	if *maxSteps != "" {
 		n, err := strconv.Atoi(strings.TrimSpace(*maxSteps))
 		if err != nil {
@@ -281,6 +291,9 @@ func overlay(cfg *Config, p partial) {
 	if p.ConfirmMode != nil {
 		cfg.Guardrail.ConfirmMode = *p.ConfirmMode
 	}
+	if p.ToolMode != nil {
+		cfg.ToolMode = *p.ToolMode
+	}
 }
 
 func validate(cfg Config, dirExists func(string) bool) error {
@@ -296,6 +309,11 @@ func validate(cfg Config, dirExists func(string) bool) error {
 	}
 	if dirExists == nil || !dirExists(cfg.Workspace) {
 		errs = append(errs, errors.New("workspace directory does not exist or is not a directory"))
+	}
+	switch cfg.ToolMode {
+	case "auto", "function", "json":
+	default:
+		errs = append(errs, fmt.Errorf("toolMode must be auto|function|json (got %q)", cfg.ToolMode))
 	}
 	return errors.Join(errs...)
 }

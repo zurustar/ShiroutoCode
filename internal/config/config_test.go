@@ -41,6 +41,26 @@ func TestDefaults(t *testing.T) {
 	}
 }
 
+func TestToolMode(t *testing.T) {
+	o := baseOpts()
+	o.Env = map[string]string{"SHIROUTO_MODEL": "m"}
+	cfg, err := Load(o)
+	if err != nil || cfg.ToolMode != "auto" {
+		t.Fatalf("default toolMode = %q err=%v", cfg.ToolMode, err)
+	}
+	// override via env
+	o.Env["SHIROUTO_TOOL_MODE"] = "json"
+	cfg, err = Load(o)
+	if err != nil || cfg.ToolMode != "json" {
+		t.Errorf("toolMode = %q err=%v", cfg.ToolMode, err)
+	}
+	// invalid rejected
+	o.Env["SHIROUTO_TOOL_MODE"] = "bogus"
+	if _, err := Load(o); err == nil {
+		t.Error("invalid toolMode should fail validation")
+	}
+}
+
 func TestEnvMapping(t *testing.T) {
 	o := baseOpts()
 	o.Env = map[string]string{
