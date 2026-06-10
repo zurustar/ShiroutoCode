@@ -104,6 +104,8 @@
 - **SECURITY-15（例外処理/フェイルセーフ）**: フェイルクローズ、トップレベルエラーハンドリング。
 - N/A想定: SECURITY-01/02/04/06/07/08/12/14（クラウド・Webサーバ・ユーザ認証前提）。最終判定は各段階で実施。
 
+> **信頼境界・残存リスク（脅威モデル）**: 本ツールは「LLM出力を信頼できない入力として扱う」前提で設計する。仕様・使い方別のリスク（`run_command` の既定 Allow 姿勢、平文httpエンドポイント、間接プロンプトインジェクション、シンボリックリンク TOCTOU、非対話時の確認不能 等）と利用者の対策は **`aidlc-docs/construction/U3-tools-guardrail/functional-design/business-rules.md`「セキュリティ前提・残存リスク（Threat Model）」(TM-1〜TM-5)** に記載。監査と是正状況は `aidlc-docs/security/security-audit-2026-06-10.md`。
+
 ## 6. Assumptions（要レビュー）
 - **A1**: プロバイダはLM Studio固定だが、エンドポイントURL/ポートとモデル名は設定変更可能。
 - **A2**: ガードレールは「ワークスペース限定スコープ + 危険コマンドdenylist + 該当時のCLI明示確認」で実現。細部は設計段階で確定。

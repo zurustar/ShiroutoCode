@@ -5,9 +5,15 @@ import (
 	"strings"
 )
 
-// normalize lowercases and collapses whitespace for robust command matching.
+// ifsReplacer undoes the common $IFS / ${IFS} whitespace-obfuscation trick so
+// matchers cannot be bypassed by writing e.g. "rm${IFS}-rf${IFS}~" (F-01).
+// Longest pattern first so ${ifs} is consumed before the bare $ifs form.
+var ifsReplacer = strings.NewReplacer("${ifs}", " ", "$ifs", " ")
+
+// normalize lowercases, undoes IFS obfuscation, and collapses whitespace for
+// robust command matching.
 func normalize(c string) string {
-	return strings.Join(strings.Fields(strings.ToLower(c)), " ")
+	return strings.Join(strings.Fields(ifsReplacer.Replace(strings.ToLower(c))), " ")
 }
 
 // --- command matchers (R4 Deny) ---
@@ -39,7 +45,11 @@ var rePower = regexp.MustCompile(`\b(shutdown|reboot|halt|poweroff)\b|\binit\s+[
 
 func systemPower(c string) bool { return rePower.MatchString(c) }
 
-var rePipeShell = regexp.MustCompile(`\|\s*(sudo\s+)?(sh|bash|zsh)\b`)
+// rePipeShell matches piping into a shell or any common interpreter — the
+// classic "curl … | sh" remote-code pattern. Limiting it to sh/bash/zsh let
+// "… | python" / "… | perl" through, so all common interpreters are covered
+// (F-01).
+var rePipeShell = regexp.MustCompile(`\|\s*(sudo\s+)?(sh|bash|zsh|dash|ksh|fish|python[0-9.]*|perl|ruby|node|php)\b`)
 
 func pipeToShell(c string) bool { return rePipeShell.MatchString(c) }
 
@@ -72,6 +82,22 @@ func gitDestructive(c string) bool {
 
 func gitPush(c string) bool { return regexp.MustCompile(`git\s+push\b`).MatchString(c) }
 
+// gitGlobalSideEffect matches git operations whose effect reaches outside the
+// workspace or can establish a code-execution hook: global/system config
+// writes, core.hooksPath changes, inline -c overrides, and --exec-path (F-07).
+// Plain repo-local `git config user.email …` is intentionally not matched.
+var (
+	reGitGlobalConfig = regexp.MustCompile(`git\s+config\b.*(--global|--system)`)
+	reGitInlineConfig = regexp.MustCompile(`git\s+-c\b`)
+)
+
+func gitGlobalSideEffect(c string) bool {
+	return reGitGlobalConfig.MatchString(c) ||
+		reGitInlineConfig.MatchString(c) ||
+		strings.Contains(c, "hookspath") ||
+		strings.Contains(c, "--exec-path")
+}
+
 // Rule is one ordered evaluation rule.
 type Rule struct {
 	Kind     ActionKind
@@ -100,6 +126,7 @@ func defaultRules() []Rule {
 		{Command, cmd(recursivePerm), Confirm, "権限の再帰変更は影響が広範です"},
 		// Git — Confirm (destructive/history-affecting and remote push)
 		{GitOp, cmd(gitDestructive), Confirm, "強制push/履歴改変/ハード破棄など取り消し困難なgit操作です"},
+		{GitOp, cmd(gitGlobalSideEffect), Confirm, "グローバル/システム設定・hooksPath・インラインconfigなどワークスペース外に影響するgit操作です"},
 		{GitOp, cmd(gitPush), Confirm, "リモートへのpushです"},
 		// Web — Deny non-http(s)
 		{WebFetch, func(a Action) bool { return !isHTTPScheme(a.URL) }, Deny, "http(s)以外のURLは許可されていません"},

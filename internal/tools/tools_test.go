@@ -55,6 +55,28 @@ func TestFileEditNonUniqueFails(t *testing.T) {
 	}
 }
 
+// F-04: the FileTool refuses to mutate outside its workspace even without the
+// guardrail in front of it (defense in depth).
+func TestFileToolRefusesOutsideWorkspace(t *testing.T) {
+	root := t.TempDir()
+	outside := t.TempDir()
+	ft := NewFileTool(root)
+	ctx := context.Background()
+	cases := []map[string]any{
+		{"path": filepath.Join(outside, "x.txt"), "mode": "overwrite", "content": "x"},
+		{"path": "../escape.txt", "mode": "create", "content": "x"},
+		{"path": filepath.Join(outside, "y.txt"), "mode": "delete"},
+	}
+	for _, args := range cases {
+		if _, err := ft.Execute(ctx, args); err == nil {
+			t.Errorf("expected refusal for %v", args)
+		}
+	}
+	if _, err := os.Stat(filepath.Join(outside, "x.txt")); !os.IsNotExist(err) {
+		t.Errorf("file outside workspace must not be created")
+	}
+}
+
 func TestTerminalEcho(t *testing.T) {
 	tt := NewTerminalTool(t.TempDir(), 10*time.Second, nil)
 	res, err := tt.Execute(context.Background(), map[string]any{"command": "echo", "args": []any{"hello"}})
