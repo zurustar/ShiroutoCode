@@ -7,4 +7,9 @@
 # Go build artifacts
 /bin/
 *.out
-shiroutocode
+# Built binary at repo root only — anchored so it does NOT match the
+# cmd/shiroutocode/ source directory (which must stay tracked).
+/shiroutocode
+
+# GoReleaser output
+/dist/
