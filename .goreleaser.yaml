@@ -32,6 +32,13 @@ builds:
     goarch:
       - amd64
       - arm64
+    ignore:
+      # Ship only the two targets that matter: Linux on Intel/AMD servers and
+      # Apple Silicon Macs. Intel Macs and ARM Linux are dropped on request.
+      - goos: darwin
+        goarch: amd64
+      - goos: linux
+        goarch: arm64
 
 archives:
   - id: shiroutocode
