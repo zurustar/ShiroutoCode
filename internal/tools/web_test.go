@@ -64,7 +64,7 @@ func TestWebFetchSizeCap(t *testing.T) {
 func TestIsBlockedIP(t *testing.T) {
 	blocked := []string{
 		"127.0.0.1", "::1", // loopback
-		"169.254.169.254",      // cloud metadata (link-local)
+		"169.254.169.254",                       // cloud metadata (link-local)
 		"10.0.0.5", "192.168.1.1", "172.16.0.1", // private
 		"0.0.0.0",   // unspecified
 		"224.0.0.1", // multicast
