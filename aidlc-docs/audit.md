@@ -439,3 +439,11 @@
 **Note**: Real LM Studio E2E (US-3.1) deferred to manual (no live model in sandbox); connection-error path (US-6.1) verified on real binary. CONSTRUCTION complete. Operations remains a placeholder.
 
 ---
+
+## Real E2E with LM Studio (google/gemma-4-12b)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "起動しました ... gemma 4 12B" (LM Studio local server up, model google/gemma-4-12b)
+**AI Response**: "Ran live E2E against real model. Findings: (1) tool-mode json -> Gemma emits native <|tool_call|> tokens, unparseable; (2) function mode -> HTTP 400 because our tool spec lacked function.parameters.properties (schema validation), NOT tool unsupported. Fix: added internal/tools/schema.go (SchemaProvider, per-tool JSON Schema with properties) + agent uses it; also added tool-mode config/flag earlier. Re-ran auto mode: SUCCESS — single-file create (US-3.1), multi-file create+read (5 steps), workspace-escape DENIED by guardrail (US-5.3, file not created), connection-error guidance (US-6.1). All 76 unit tests green. Added schema regression test. Updated e2e/summary docs + state."
+**Status**: E2E Pass; MVP validated end-to-end on real local LLM
+**Context**: Build and Test — live E2E complete; CONSTRUCTION fully validated
+---

@@ -76,7 +76,8 @@
 - [x] Instructions (build/unit/integration/e2e/security) + summary generated
 - [x] Makefile + GitHub Actions CI added
 - [x] Verified: go build ./... OK, go test ./... -race PASS (74 tests), 72.6% coverage, binary builds
-- [ ] Manual real-LM-Studio E2E (US-3.1 multi-file edit) — pending live model
+- [x] Real LM Studio E2E (google/gemma-4-12b, 2026-06-10): single-file ✅, multi-file+read ✅ (US-3.1), workspace-escape blocked ✅ (US-5.3), connection error ✅ (US-6.1)
+- [x] E2E fix: tool schemas need `properties` (internal/tools/schema.go) — function calling now works; + tool-mode config/flag added
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER (future: GitHub Releases binary distribution / go install)

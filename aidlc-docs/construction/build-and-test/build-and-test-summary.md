@@ -30,10 +30,11 @@
 - ガードレール（スコープ/denylist/フェイルクローズ）・マスキング・エラー非露出を自動テストで担保。`govulncheck` は手動/CI。
 - **Status**: ✅ Pass（govulncheck はローカル未実行→CIで実行）
 
-### E2E Tests（実 LM Studio）
-- 接続失敗系（US-6.1）は実バイナリで確認済み。
-- **完全な実モデル対話E2E（US-3.1 マルチファイル編集）は LM Studio 起動環境で手動**（手順: e2e-test-instructions.md）。
-- **Status**: ⏳ 手動待ち（自動環境にLM Studioなし）
+### E2E Tests（実 LM Studio: google/gemma-4-12b, 2026-06-10）
+- ✅ 単一ファイル作成（US-3.1）/ ✅ マルチファイル作成+読み戻し（US-3.1中核）/ ✅ ワークスペース外書き込みのガードレール拒否（US-5.3）/ ✅ 接続失敗案内（US-6.1）
+- **実地修正**: ツールスキーマに `properties` 追加（function calling の HTTP 400 を解消, internal/tools/schema.go）。
+- 推奨: `--tool-mode auto`（function calling）。
+- **Status**: ✅ Pass（実モデルで主要シナリオ検証済み）
 
 ## Overall Status
 - **Build**: ✅ Success

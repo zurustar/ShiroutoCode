@@ -40,6 +40,18 @@ ls "$WS"; (cd "$WS" && gofmt -l .)
 - [ ] 最大ステップ到達で停止する（US-3.3）
 - [ ] LM Studio を止めると分かりやすい接続エラー（US-6.1）
 
+## 実施済み E2E 結果（2026-06-10, 実モデル: `google/gemma-4-12b` via LM Studio）
+| シナリオ | コマンド要旨 | 結果 |
+|---|---|---|
+| 単一ファイル作成（US-3.1） | "hello.txt に Hello… を作成" | ✅ 2ステップで write_file→完了、内容一致 |
+| マルチファイル（US-3.1中核） | "a.txt=alpha, b.txt=beta 作成し読み戻す" | ✅ 5ステップ（write×2, read×2, final）、両ファイル一致 |
+| スコープ防御（US-5.3） | "/tmp/外部.txt を作成" | ✅ ガードレールが Deny、ファイル未作成、モデルに制限通知 |
+| 接続失敗（US-6.1） | LM Studio停止時 | ✅ リトライ後「接続できません」案内・exit≠0 |
+
+### 重要な実地修正（E2Eで発見）
+- **ツールスキーマに `properties` が無く function calling が HTTP 400** になっていた → 各ツールに JSON Schema（`internal/tools/schema.go`）を追加して解消。これにより Gemma 4 でも `--tool-mode auto`（function calling）が機能。
+- Gemma 4 は OpenAI 互換 function calling を LM Studio 経由で利用可（独自 `<|tool_call|>` トークンはサーバが tool_calls に変換）。`--tool-mode json` 単独だとモデルが独自トークンを出しパース不可だったため、**auto/function 推奨**。
+
 ## 備考
-- 本リポジトリのサンドボックスでは LM Studio 未起動のため自動E2Eは未実施。接続失敗系（US-6.1）は実バイナリで確認済み。
 - モデルの能力により tool 呼び出し精度が変わる（function calling対応モデル推奨）。
+- 推奨実行: `--tool-mode auto`（既定）。function calling非対応モデルでは `--tool-mode json`（プロンプト規約）。

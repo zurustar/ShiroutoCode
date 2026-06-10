@@ -16,10 +16,14 @@ func (r *Runner) specs() []llm.ToolSpec {
 		if !ok {
 			continue
 		}
+		params := map[string]any{"type": "object", "properties": map[string]any{}}
+		if sp, ok := t.(tools.SchemaProvider); ok {
+			params = sp.ParametersSchema()
+		}
 		out = append(out, llm.ToolSpec{
 			Name:        t.Name(),
 			Description: t.Description(),
-			Parameters:  map[string]any{"type": "object"},
+			Parameters:  params,
 		})
 	}
 	return out
