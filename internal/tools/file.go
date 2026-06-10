@@ -29,6 +29,51 @@ func (t *FileTool) abs(path string) string {
 	return filepath.Clean(filepath.Join(t.root, path))
 }
 
+// ensureWithin enforces the workspace boundary inside the tool itself, as
+// defense in depth: the guardrail is the primary gate, but a mutating tool must
+// never write or delete outside its root even if reached by another path
+// (F-04). It also re-checks immediately before the mutation, shrinking the
+// symlink TOCTOU window (F-05). Resolution failures fail closed.
+func (t *FileTool) ensureWithin(abs string) error {
+	rootReal, err := filepath.EvalSymlinks(t.root)
+	if err != nil {
+		rootReal = filepath.Clean(t.root)
+	}
+	real := resolveExistingAncestor(abs)
+	if real == rootReal || strings.HasPrefix(real, rootReal+string(os.PathSeparator)) {
+		return nil
+	}
+	return fmt.Errorf("refusing to operate outside the workspace")
+}
+
+// resolveExistingAncestor resolves symlinks on the deepest existing ancestor of
+// p and re-appends the non-existent trailing components, mirroring the
+// guardrail's resolver so a not-yet-created file can still be range-checked.
+func resolveExistingAncestor(p string) string {
+	cur := filepath.Clean(p)
+	var rest []string
+	for {
+		if resolved, err := filepath.EvalSymlinks(cur); err == nil {
+			parts := append([]string{resolved}, reverse(rest)...)
+			return filepath.Join(parts...)
+		}
+		parent := filepath.Dir(cur)
+		if parent == cur {
+			return cur
+		}
+		rest = append(rest, filepath.Base(cur))
+		cur = parent
+	}
+}
+
+func reverse(s []string) []string {
+	out := make([]string, len(s))
+	for i, v := range s {
+		out[len(s)-1-i] = v
+	}
+	return out
+}
+
 func (t *FileTool) Execute(ctx context.Context, args map[string]any) (ToolResult, error) {
 	mode := argString(args, "mode")
 	path := argString(args, "path")
@@ -36,6 +81,9 @@ func (t *FileTool) Execute(ctx context.Context, args map[string]any) (ToolResult
 		return ToolResult{}, fmt.Errorf("path is required")
 	}
 	abs := t.abs(path)
+	if err := t.ensureWithin(abs); err != nil {
+		return ToolResult{}, err
+	}
 
 	switch mode {
 	case "create", "overwrite", "":

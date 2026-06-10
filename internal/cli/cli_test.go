@@ -9,6 +9,7 @@ import (
 	"pgregory.net/rapid"
 
 	"github.com/zurustar/shiroutocode/internal/guardrail"
+	"github.com/zurustar/shiroutocode/internal/log"
 )
 
 // R3 (PBT): only y/yes (case-insensitive, trimmed) confirm.
@@ -43,6 +44,43 @@ func TestPromptConfirmer(t *testing.T) {
 		}
 		if !strings.Contains(out.String(), "確認が必要") {
 			t.Errorf("prompt not shown for %q", c.in)
+		}
+	}
+}
+
+// F-09: a read error (EOF without newline) must decline, never approve — even
+// if the partial bytes read look like "y".
+func TestPromptConfirmerDeclinesOnError(t *testing.T) {
+	for _, in := range []string{"y", "yes", ""} { // no trailing newline -> EOF
+		var out bytes.Buffer
+		pc := newPromptConfirmer(strings.NewReader(in), &out)
+		ok, err := pc.Confirm(context.Background(), guardrail.Action{Tool: "run_command"}, "危険")
+		if err != nil {
+			t.Errorf("in=%q unexpected err %v", in, err)
+		}
+		if ok {
+			t.Errorf("in=%q (EOF, no newline) must decline, got approve", in)
+		}
+	}
+}
+
+// F-08: cleartext http to a non-loopback host warns; localhost/https are quiet.
+func TestWarnInsecureEndpoint(t *testing.T) {
+	warns := func(endpoint string) bool {
+		var buf bytes.Buffer
+		logger := log.New("info", log.FormatText, &buf)
+		warnInsecureEndpoint(endpoint, logger)
+		return strings.Contains(buf.String(), "cleartext http")
+	}
+	if !warns("http://10.0.0.5:1234/v1") {
+		t.Errorf("non-loopback http should warn")
+	}
+	if !warns("http://example.com/v1") {
+		t.Errorf("remote http host should warn")
+	}
+	for _, e := range []string{"http://localhost:1234/v1", "http://127.0.0.1:1234/v1", "https://api.example.com/v1"} {
+		if warns(e) {
+			t.Errorf("%q should not warn", e)
 		}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -33,6 +34,24 @@ func resolveWithin(root, target string) (resolved string, within bool, err error
 	}
 	within = real == rootReal || strings.HasPrefix(real, rootReal+string(os.PathSeparator))
 	return real, within, nil
+}
+
+// isGitInternalPath reports whether the canonical path resolved points inside a
+// .git directory. resolved is already symlink-canonical, so a plain string
+// scan for a ".git" path segment is sufficient (F-02). It does not match
+// sibling names like ".gitignore" or ".github".
+func isGitInternalPath(resolved string) bool {
+	sep := string(os.PathSeparator)
+	return strings.Contains(resolved, sep+".git"+sep) || strings.HasSuffix(resolved, sep+".git")
+}
+
+// reSensitivePath matches well-known credential/secret stores. Matching is on
+// the canonical path so obfuscated relatives cannot slip through (F-04).
+var reSensitivePath = regexp.MustCompile(`/\.ssh/|/\.aws/|/\.gnupg/|/\.netrc|/etc/shadow|/etc/sudoers|id_rsa|id_ed25519|id_ecdsa|id_dsa`)
+
+// isSensitivePath reports whether a path looks like a credential/secret store.
+func isSensitivePath(resolved string) bool {
+	return reSensitivePath.MatchString(resolved)
 }
 
 // evalExisting resolves symlinks on the deepest existing ancestor of p, then

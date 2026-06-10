@@ -24,8 +24,10 @@ func newPromptConfirmer(in io.Reader, out io.Writer) *promptConfirmer {
 func (c *promptConfirmer) Confirm(ctx context.Context, a guardrail.Action, reason string) (bool, error) {
 	fmt.Fprintf(c.out, "\n⚠ 確認が必要です: %s\n  ツール: %s\n実行しますか? [y/N]: ", reason, a.Tool)
 	line, err := c.in.ReadString('\n')
-	if err != nil && line == "" {
-		return false, nil // treat EOF/error as decline (fail-safe)
+	if err != nil {
+		// Any read error (EOF, broken pipe, partial line) is a decline — never
+		// approve on a confirmation we could not fully read (F-09, fail-safe).
+		return false, nil
 	}
 	return parseYes(line), nil
 }

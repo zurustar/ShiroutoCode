@@ -447,3 +447,27 @@
 **Status**: E2E Pass; MVP validated end-to-end on real local LLM
 **Context**: Build and Test — live E2E complete; CONSTRUCTION fully validated
 ---
+
+## Security Audit (ad-hoc request)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "セキュリティ上の問題がないか徹底的に調べ上げ、もし課題があるようであればタスクとしてドキュメントに記してください"
+**AI Response**: "Audited internal/tools, guardrail, llm, config, cli, agent, log. Documented 9 findings (2 High, 5 Medium, 2 Low) with remediation tasks in aidlc-docs/security/security-audit-2026-06-10.md. High: F-01 run_command deny-list bypassable & unmatched commands default-Allow even non-interactive; F-02 .git/hooks write bypasses guardrail -> arbitrary code execution via git commit. Medium: F-03 web_fetch SSRF (no internal/metadata IP blocking), F-04 tools don't self-enforce workspace scope (read outside = Confirm not Deny), F-05 symlink TOCTOU on writes, F-06 invalid ExtraDenyPatterns silently fail-open, F-07 git tool allows arbitrary subcommands (config/global side effects). Low: F-08 plaintext http endpoint allowed, F-09 confirm-prompt edge case & default-Allow posture. No code changed."
+**Status**: Findings documented; awaiting prioritization/fix decision
+**Context**: Security review of construction artifacts; no source modified
+---
+
+## Security Remediation (ad-hoc request)
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "進めて"
+**AI Response**: "Implemented security fixes (TDD) for the audit findings. F-02: .git/ writes -> Confirm (evaluator+scope). F-07: git --global/--system config, hooksPath, git -c, --exec-path -> Confirm (rules). F-03: web_fetch SSRF guard via net.Dialer.Control blocking loopback/link-local/private/metadata/ULA IPs (also covers redirects); blockIP swappable for tests. F-01: normalize undoes ${IFS}/$IFS; pipe-to-interpreter now covers python/perl/ruby/node/php/dash/ksh/fish; regression tests added. default-Allow posture left as documented product decision. F-04: FileTool write/delete self-enforces workspace boundary (defense-in-depth) + sensitive-path external reads -> Deny. F-05: re-validation shrinks TOCTOU window; full openat hardening deferred. F-06: guardrail.InvalidDenyPatterns + BuildCore warns. F-08: warnInsecureEndpoint warns on non-loopback http. F-09: confirm prompt declines on any read error. All packages build; go test ./... -race green; go vet clean. Updated aidlc-docs/security/security-audit-2026-06-10.md with status table."
+**Status**: 7 of 9 fully fixed; F-01 posture & F-05 full-confinement deferred with rationale
+**Context**: Security remediation following audit; tests green
+---
+
+## Security Spec — Threat Model Documentation
+**Timestamp**: 2026-06-10T00:00:00Z
+**User Input**: "残項目については、こういう仕様で、こういう使い方においては、こんなリスクがありうる、みたいなことを仕様を書くドキュメントに書いて欲しいです"
+**AI Response**: "Documented residual/accepted risks in the spec. Updated U3 guardrail business-rules.md: reflected implemented rules (R3 .git/Confirm + sensitive-read Deny + tool-level boundary; R4 IFS/interpreter; R6 git config/hooksPath/-c/--exec-path Confirm; R7 SSRF) and added a 'セキュリティ前提・残存リスク（Threat Model）' section TM-1..TM-5 in '仕様→使い方→リスク→対策' form (TM-1 run_command default-Allow posture, TM-2 trust boundary/plaintext endpoint, TM-3 indirect prompt injection, TM-4 symlink TOCTOU, TM-5 non-interactive confirm). TM-1 & TM-4 marked as intentionally accepted residual risks. Added cross-reference pointer in requirements.md §5.1. No code changed."
+**Status**: Threat model & residual risks documented in spec
+**Context**: Documentation of accepted residual risks per user request
+---
