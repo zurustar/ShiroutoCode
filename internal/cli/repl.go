@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/zurustar/shiroutocode/internal/agent"
@@ -15,6 +16,14 @@ import (
 // prompt — so Japanese/IME input works correctly — and agent events stream to
 // stdout as they happen, so progress is visible while the LLM works.
 func runREPL(ctx context.Context, core *Core, stdout, stderr io.Writer, stdin io.Reader) int {
+	// Ensure the terminal edits multibyte (Japanese) input correctly: canonical
+	// mode + echo + IUTF8 so one backspace erases a whole character. No-op when
+	// stdin is not a real terminal (tests, pipes).
+	if f, ok := stdin.(*os.File); ok {
+		restore := enableCookedUTF8(int(f.Fd()))
+		defer restore()
+	}
+
 	r := bufio.NewReader(stdin)
 
 	// Choose the model after launch (per design). Pre-select any configured one.
