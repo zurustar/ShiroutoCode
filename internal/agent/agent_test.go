@@ -239,3 +239,29 @@ func TestConversationPersistsAcrossRuns(t *testing.T) {
 		t.Errorf("expected exactly 1 system message, got %d", sys)
 	}
 }
+
+// errLLM always fails on Complete (simulates an HTTP 500 after retries).
+type errLLM struct{ err error }
+
+func (e *errLLM) Complete(ctx context.Context, req llm.Request) (llm.Stream, error) {
+	return nil, e.err
+}
+
+// A failed run rolls the conversation back so the next turn starts clean
+// (the failed prompt is not resent and can't keep poisoning requests).
+func TestFailedRunRollsBackHistory(t *testing.T) {
+	r := NewRunner(&errLLM{err: &llm.LLMError{Kind: llm.ErrHTTPStatus, StatusCode: 500, UserMessage: "boom"}},
+		&fakeDispatcher{}, reg())
+
+	res, err := r.Run(context.Background(), Task{Prompt: "do X"})
+	if err != nil {
+		t.Fatalf("run err: %v", err)
+	}
+	if res.Status != Failed {
+		t.Fatalf("status = %v, want Failed", res.Status)
+	}
+	// Only the system message should remain; the failed user turn is gone.
+	if len(r.history) != 1 || r.history[0].Role != llm.RoleSystem {
+		t.Errorf("history not rolled back: %+v", r.history)
+	}
+}

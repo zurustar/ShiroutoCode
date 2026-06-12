@@ -148,6 +148,10 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 	if len(r.history) == 0 {
 		r.history = append(r.history, llm.Message{Role: llm.RoleSystem, Content: r.system})
 	}
+	// mark is the rollback point (after system, before this turn). On an LLM
+	// failure we trim back to here so a half-formed turn — e.g. a malformed
+	// tool call that the server then 500s on — does not poison later turns.
+	mark := len(r.history)
 	r.history = append(r.history, llm.Message{Role: llm.RoleUser, Content: task.Prompt})
 	var changed []string
 
@@ -164,12 +168,12 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 		}
 		stream, err := r.llm.Complete(ctx, req)
 		if err != nil {
-			return r.failOrAbort(ctx, err, changed, step), nil
+			return r.finishErr(ctx, err, changed, step, mark), nil
 		}
 		res, cerr := llm.CollectStreaming(stream, r.fe.OnAssistantText)
 		stream.Close()
 		if cerr != nil {
-			return r.failOrAbort(ctx, cerr, changed, step), nil
+			return r.finishErr(ctx, cerr, changed, step, mark), nil
 		}
 
 		r.fe.OnStep(step, r.maxSteps)
@@ -191,6 +195,17 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 	}
 
 	return Result{Status: StoppedMaxSteps, ChangedFiles: changed, Steps: r.maxSteps}, nil
+}
+
+// finishErr classifies a failure and, when it is a genuine failure (not a
+// user abort), rolls the conversation back to mark so the failed turn does not
+// remain in history and break subsequent requests.
+func (r *Runner) finishErr(ctx context.Context, err error, changed []string, step, mark int) Result {
+	res := r.failOrAbort(ctx, err, changed, step)
+	if res.Status == Failed && mark <= len(r.history) {
+		r.history = r.history[:mark]
+	}
+	return res
 }
 
 func (r *Runner) failOrAbort(ctx context.Context, err error, changed []string, step int) Result {

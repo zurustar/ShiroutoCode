@@ -26,6 +26,7 @@ const (
 
 // Logger is the minimal logging surface used across ShiroutoCode.
 type Logger interface {
+	Debug(msg string, kv ...any)
 	Info(msg string, kv ...any)
 	Warn(msg string, kv ...any)
 	Error(msg string, kv ...any)
@@ -60,6 +61,7 @@ func New(level string, format Format, w io.Writer) Logger {
 	return &slogLogger{l: slog.New(h)}
 }
 
+func (s *slogLogger) Debug(msg string, kv ...any) { s.l.Debug(msg, kv...) }
 func (s *slogLogger) Info(msg string, kv ...any)  { s.l.Info(msg, kv...) }
 func (s *slogLogger) Warn(msg string, kv ...any)  { s.l.Warn(msg, kv...) }
 func (s *slogLogger) Error(msg string, kv ...any) { s.l.Error(msg, kv...) }
