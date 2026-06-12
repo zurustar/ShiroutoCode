@@ -63,7 +63,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer, stdin io.
 		return runSingleShot(ctx, core, prompt, stdout, stderr, stdin, isTTY)
 	case isTTY:
 		// REPL: the picker is presented at startup (and via /model).
-		return runREPL(ctx, core, stdout, stderr)
+		return runREPL(ctx, core, stdout, stderr, stdin)
 	default:
 		fmt.Fprintln(stderr, `使い方: shiroutocode "<指示>"   （または端末で対話モード）`)
 		return exitUsage
