@@ -31,18 +31,27 @@ func (s *fakeStream) Close() error       { return nil }
 func (s *fakeStream) Mode() llm.ToolMode { return llm.ToolModeFunction }
 
 type fakeClient struct {
-	chunks []llm.Chunk
-	err    error
+	chunks  []llm.Chunk
+	err     error
+	model   string
+	models  []string
+	listErr error
 }
 
-func (f fakeClient) Complete(ctx context.Context, req llm.Request) (llm.Stream, error) {
+func (f *fakeClient) Complete(ctx context.Context, req llm.Request) (llm.Stream, error) {
 	if f.err != nil {
 		return nil, f.err
 	}
 	return &fakeStream{chunks: append([]llm.Chunk(nil), f.chunks...)}, nil
 }
 
-func testCore(t *testing.T, client llm.LLMClient) *Core {
+func (f *fakeClient) Model() string     { return f.model }
+func (f *fakeClient) SetModel(m string) { f.model = m }
+func (f *fakeClient) ListModels(ctx context.Context) ([]string, error) {
+	return f.models, f.listErr
+}
+
+func testCore(t *testing.T, client llmClient) *Core {
 	t.Helper()
 	return &Core{
 		cfg:    config.Config{MaxSteps: 5, Workspace: t.TempDir()},
@@ -55,7 +64,7 @@ func testCore(t *testing.T, client llm.LLMClient) *Core {
 
 // Single-shot completion prints summary and exits 0.
 func TestSingleShotCompletes(t *testing.T) {
-	client := fakeClient{chunks: []llm.Chunk{
+	client := &fakeClient{chunks: []llm.Chunk{
 		{Kind: llm.ChunkText, Text: "done thing"},
 		{Kind: llm.ChunkDone, FinishReason: "stop"},
 	}}
@@ -71,7 +80,7 @@ func TestSingleShotCompletes(t *testing.T) {
 
 // US-6.1: connection failure surfaces guidance and a non-zero exit code.
 func TestSingleShotConnectionError(t *testing.T) {
-	client := fakeClient{err: &llm.LLMError{
+	client := &fakeClient{err: &llm.LLMError{
 		Kind:        llm.ErrUnreachable,
 		UserMessage: "LM Studio に接続できません。起動状態と Endpoint を確認してください。",
 	}}

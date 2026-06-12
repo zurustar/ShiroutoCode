@@ -8,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/zurustar/shiroutocode/internal/agent"
+	"github.com/zurustar/shiroutocode/internal/llm"
 )
 
 func newTestModel() *tuiModel {
@@ -88,5 +89,76 @@ func TestTUICtrlCQuitsWhenIdle(t *testing.T) {
 	// tea.Quit is a func returning tea.QuitMsg
 	if _, ok := cmd().(tea.QuitMsg); !ok {
 		t.Error("ctrl+c when idle should quit")
+	}
+}
+
+// modelsMsg opens the picker; navigating and pressing Enter selects a model.
+func TestTUIModelSelectFlow(t *testing.T) {
+	core := testCore(t, &fakeClient{models: []string{"a", "b", "c"}})
+	m := newModel(context.Background(), core, make(chan tea.Msg, 16))
+	mm, _ := m.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+	m = mm.(*tuiModel)
+
+	mm, _ = m.Update(modelsMsg{models: []string{"a", "b", "c"}})
+	m = mm.(*tuiModel)
+	if !m.selecting {
+		t.Fatal("expected picker to open on modelsMsg")
+	}
+	if !strings.Contains(m.View(), "モデルを選択") {
+		t.Errorf("picker view not shown:\n%s", m.View())
+	}
+
+	mm, _ = m.Update(tea.KeyMsg{Type: tea.KeyDown})
+	m = mm.(*tuiModel)
+	mm, _ = m.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	m = mm.(*tuiModel)
+	if m.selecting {
+		t.Error("should exit selecting after Enter")
+	}
+	if core.Model() != "b" {
+		t.Errorf("selected model = %q, want b", core.Model())
+	}
+}
+
+// /model re-opens the picker; a prompt before any model is selected is refused.
+func TestTUIModelCommandAndGuard(t *testing.T) {
+	core := testCore(t, &fakeClient{models: []string{"x"}})
+	m := newModel(context.Background(), core, make(chan tea.Msg, 16))
+	mm, _ := m.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+	m = mm.(*tuiModel)
+
+	// No model yet: a prompt is refused with guidance.
+	m.ti.SetValue("do something")
+	mm, _ = m.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	m = mm.(*tuiModel)
+	if m.running {
+		t.Error("must not run without a model")
+	}
+	if !strings.Contains(m.history.String(), "先にモデルを選択") {
+		t.Errorf("missing model guidance:\n%s", m.history.String())
+	}
+
+	// /model returns a fetch command (re-opens the picker).
+	m.ti.SetValue("/model")
+	_, cmd := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	if cmd == nil {
+		t.Error("/model should trigger a fetch command")
+	}
+}
+
+// A fetch error leaves the picker closed and surfaces guidance.
+func TestTUIModelFetchError(t *testing.T) {
+	core := testCore(t, &fakeClient{})
+	m := newModel(context.Background(), core, make(chan tea.Msg, 16))
+	mm, _ := m.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+	m = mm.(*tuiModel)
+
+	mm, _ = m.Update(modelsMsg{err: &llm.LLMError{Kind: llm.ErrUnreachable, UserMessage: "接続できません"}})
+	m = mm.(*tuiModel)
+	if m.selecting {
+		t.Error("picker should stay closed on fetch error")
+	}
+	if !strings.Contains(m.history.String(), "接続できません") {
+		t.Errorf("fetch error not surfaced:\n%s", m.history.String())
 	}
 }

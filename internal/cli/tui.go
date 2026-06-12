@@ -67,6 +67,22 @@ type tuiModel struct {
 	cancel     context.CancelFunc
 	confirming bool
 	reply      chan bool
+
+	selecting bool   // model picker is open (startup or /model)
+	pk        picker // picker state while selecting
+}
+
+// modelsMsg carries the result of an async model-list fetch.
+type modelsMsg struct {
+	models []string
+	err    error
+}
+
+func fetchModelsCmd(ctx context.Context, lister modelLister) tea.Cmd {
+	return func() tea.Msg {
+		ms, err := lister.ListModels(ctx)
+		return modelsMsg{models: ms, err: err}
+	}
 }
 
 // viewportInput aliases textinput.Model (kept separate for clarity).
@@ -85,7 +101,8 @@ func waitForEvent(ch chan tea.Msg) tea.Cmd {
 }
 
 func (m *tuiModel) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink, waitForEvent(m.ch))
+	// Present the model picker at startup by fetching the server's model list.
+	return tea.Batch(textinput.Blink, waitForEvent(m.ch), fetchModelsCmd(m.parentCtx, m.core))
 }
 
 func (m *tuiModel) appendLine(s string) {
@@ -119,6 +136,20 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		return m.handleKey(msg)
 
+	case modelsMsg:
+		if msg.err != nil {
+			m.appendLine("\n⚠ モデル一覧を取得できません: " + modelSelectError(msg.err))
+			m.appendLine("LM Studio を起動後、/model で再試行できます。")
+			return m, nil
+		}
+		if len(msg.models) == 0 {
+			m.appendLine("\n⚠ 利用可能なモデルがありません。LM Studio でモデルをロードしてください。")
+			return m, nil
+		}
+		m.pk = newPicker(msg.models, m.core.Model())
+		m.selecting = true
+		return m, nil
+
 	case assistantTextMsg:
 		m.appendText(string(msg))
 		return m, waitForEvent(m.ch)
@@ -150,6 +181,9 @@ func (m *tuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *tuiModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	if m.selecting {
+		return m.handleSelectKey(msg)
+	}
 	if m.confirming {
 		ok := parseYes(msg.String())
 		m.reply <- ok
@@ -179,6 +213,17 @@ func (m *tuiModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		if prompt == "" {
 			return m, nil
 		}
+		if prompt == "/model" {
+			m.ti.Reset()
+			m.appendLine("> /model")
+			return m, fetchModelsCmd(m.parentCtx, m.core)
+		}
+		if m.core.Model() == "" {
+			m.ti.Reset()
+			m.appendLine("> " + prompt)
+			m.appendLine("⚠ 先にモデルを選択してください（/model）。")
+			return m, nil
+		}
 		m.ti.Reset()
 		m.appendLine("> " + prompt)
 		return m, m.startRun(prompt)
@@ -187,6 +232,47 @@ func (m *tuiModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	m.ti, cmd = m.ti.Update(msg)
 	return m, cmd
+}
+
+// handleSelectKey drives the model picker while it is open.
+func (m *tuiModel) handleSelectKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	switch msg.Type {
+	case tea.KeyUp:
+		m.pk.up()
+	case tea.KeyDown:
+		m.pk.down()
+	case tea.KeyEnter:
+		chosen := m.pk.selected()
+		m.selecting = false
+		if chosen != "" {
+			m.core.SetModel(chosen)
+			m.appendLine("モデル: " + chosen)
+		}
+		return m, nil
+	case tea.KeyCtrlC, tea.KeyEsc:
+		return m.cancelSelect()
+	case tea.KeyRunes:
+		switch msg.String() {
+		case "k":
+			m.pk.up()
+		case "j":
+			m.pk.down()
+		case "q":
+			return m.cancelSelect()
+		}
+	}
+	return m, nil
+}
+
+// cancelSelect closes the picker. With no model selected yet there is nothing
+// to run, so the program quits; otherwise it keeps the current model.
+func (m *tuiModel) cancelSelect() (tea.Model, tea.Cmd) {
+	m.selecting = false
+	if m.core.Model() == "" {
+		return m, tea.Quit
+	}
+	m.appendLine("（モデル選択を中止）")
+	return m, nil
 }
 
 func (m *tuiModel) startRun(prompt string) tea.Cmd {
@@ -205,6 +291,9 @@ func (m *tuiModel) startRun(prompt string) tea.Cmd {
 }
 
 func (m *tuiModel) View() string {
+	if m.selecting {
+		return m.pk.view("使用するモデルを選択してください（/model で変更可）:")
+	}
 	if !m.ready {
 		return "起動中..."
 	}

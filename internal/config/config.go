@@ -304,9 +304,9 @@ func overlay(cfg *Config, p partial) {
 
 func validate(cfg Config, dirExists func(string) bool) error {
 	var errs []error
-	if strings.TrimSpace(cfg.Model) == "" {
-		errs = append(errs, errors.New("model is not set: provide --model, SHIROUTO_MODEL, or 'model' in a config file"))
-	}
+	// Note: an empty model is NOT a config error. It is resolved at the CLI
+	// layer — interactively via the model picker (GET /v1/models), or reported
+	// as a usage error when no terminal is available to pick from.
 	if err := validateEndpoint(cfg.Endpoint); err != nil {
 		errs = append(errs, err)
 	}

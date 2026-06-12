@@ -127,7 +127,8 @@ func TestValidationAggregatesErrors(t *testing.T) {
 		t.Fatal("expected aggregated error")
 	}
 	msg := err.Error()
-	for _, want := range []string{"model", "endpoint", "maxSteps", "workspace"} {
+	// model is intentionally NOT required here — it is resolved at the CLI layer.
+	for _, want := range []string{"endpoint", "maxSteps", "workspace"} {
 		if !strings.Contains(strings.ToLower(msg), strings.ToLower(want)) {
 			t.Errorf("aggregated error missing %q: %s", want, msg)
 		}
