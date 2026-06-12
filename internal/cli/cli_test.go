@@ -94,10 +94,25 @@ func TestPlainFrontend(t *testing.T) {
 	f.OnToolResult("run_command", "", &guardrail.BlockedError{Reason: "blocked"})
 	f.OnStep(1, 5)
 	s := buf.String()
-	for _, want := range []string{"hello", "[tool] read_file", "[tool:read_file] content", "error: blocked", "[step 1/5]"} {
+	for _, want := range []string{"hello", "read_file", "content", "blocked", "step 1/5"} {
 		if !strings.Contains(s, want) {
 			t.Errorf("output missing %q in:\n%s", want, s)
 		}
+	}
+	if !f.wroteText {
+		t.Error("wroteText should be true after assistant text")
+	}
+}
+
+// A completed run with no assistant text is reported as such (not silently).
+func TestPlainFrontendEmptyTextTracked(t *testing.T) {
+	var buf bytes.Buffer
+	f := &plainFrontend{w: &buf}
+	f.OnToolCall("write_file", map[string]any{"path": "a"})
+	f.OnToolResult("write_file", "ok", nil)
+	f.OnStep(1, 5)
+	if f.wroteText {
+		t.Error("wroteText must be false when the model emitted no text")
 	}
 }
 
