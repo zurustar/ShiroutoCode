@@ -73,10 +73,21 @@ type Dispatcher interface {
 }
 
 // DefaultSystemPrompt guides the model through the tool-using loop.
-const DefaultSystemPrompt = `You are ShiroutoCode, an autonomous coding agent.
-Work step by step: plan, call a tool, observe its result, then continue.
-Use the provided tools to read and modify files, run commands, use git, or fetch web pages.
-When the task is complete, reply with your final answer and DO NOT call any tool.`
+const DefaultSystemPrompt = `You are ShiroutoCode, an autonomous coding agent operating inside the user's workspace.
+
+Work in a loop: think briefly, call a tool, observe its result, then continue. Tools:
+- read_file: read a workspace file.
+- write_file: create, overwrite, edit, or delete a workspace file. This is how you SAVE code.
+- run_command: run a shell command in the workspace.
+- git: run git operations.
+- web_fetch: fetch a web page.
+
+Rules:
+- When the user asks you to create, generate, or modify code or files, you MUST call write_file to write the content to the workspace. Code shown only as text in your reply is NOT saved to disk — always persist it with write_file.
+- Prefer taking concrete actions (tool calls) over merely describing them.
+- After editing, you may verify with read_file or run_command.
+- The conversation continues across turns: remember earlier instructions, files you created, and results when handling follow-up requests.
+- Only when the task is fully complete, reply with a short final summary and DO NOT call any tool.`
 
 // Runner executes the agent loop.
 type Runner struct {
@@ -88,6 +99,10 @@ type Runner struct {
 	maxSteps int
 	toolMode llm.ToolMode
 	system   string
+
+	// history is the running conversation. It persists across Run calls so a
+	// REPL session has multi-turn memory (follow-up prompts see prior turns).
+	history []llm.Message
 }
 
 // Option configures a Runner.
@@ -117,16 +132,21 @@ func NewRunner(client llm.LLMClient, disp Dispatcher, reg *tools.Registry, opts 
 	return r
 }
 
+// Reset clears the conversation history, starting a fresh session while
+// keeping the same client, tools and configuration.
+func (r *Runner) Reset() { r.history = nil }
+
 // Run executes the loop until completion, the step limit, or cancellation (F1).
 func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 	if strings.TrimSpace(task.Prompt) == "" {
 		return Result{Status: Failed}, errors.New("empty prompt")
 	}
 
-	msgs := []llm.Message{
-		{Role: llm.RoleSystem, Content: r.system},
-		{Role: llm.RoleUser, Content: task.Prompt},
+	// Seed the system message once, then carry the conversation across turns.
+	if len(r.history) == 0 {
+		r.history = append(r.history, llm.Message{Role: llm.RoleSystem, Content: r.system})
 	}
+	r.history = append(r.history, llm.Message{Role: llm.RoleUser, Content: task.Prompt})
 	var changed []string
 
 	for step := 1; step <= r.maxSteps; step++ {
@@ -135,7 +155,7 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 		}
 
 		req := llm.Request{
-			Messages: msgs,
+			Messages: r.history,
 			Tools:    r.specs(),
 			Stream:   true,
 			ToolMode: r.toolMode,
@@ -153,16 +173,18 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 		r.fe.OnStep(step, r.maxSteps)
 
 		if len(res.ToolCalls) == 0 {
+			// Record the final answer so follow-up turns remember it.
+			r.history = append(r.history, llm.Message{Role: llm.RoleAssistant, Content: res.Text})
 			return Result{Status: Completed, Summary: res.Text, ChangedFiles: changed, Steps: step}, nil
 		}
 
-		appendAssistant(&msgs, res, stream.Mode())
+		appendAssistant(&r.history, res, stream.Mode())
 		for _, tc := range res.ToolCalls {
 			r.fe.OnToolCall(tc.Name, tc.Args)
 			out, derr := r.disp.Dispatch(ctx, tools.ToolCall{Name: tc.Name, Args: tc.Args})
 			r.fe.OnToolResult(tc.Name, out.Output, derr)
 			changed = append(changed, out.Changed...)
-			appendObservation(&msgs, tc, out, derr, stream.Mode())
+			appendObservation(&r.history, tc, out, derr, stream.Mode())
 		}
 	}
 

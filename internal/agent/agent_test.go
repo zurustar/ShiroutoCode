@@ -48,11 +48,13 @@ func toolStream(name, id string) *fakeStream {
 
 // fakeLLM returns scripted streams in order; the last is reused if exhausted.
 type fakeLLM struct {
-	streams []*fakeStream
-	calls   int32
+	streams  []*fakeStream
+	calls    int32
+	requests [][]llm.Message // messages seen on each Complete call
 }
 
 func (f *fakeLLM) Complete(ctx context.Context, req llm.Request) (llm.Stream, error) {
+	f.requests = append(f.requests, append([]llm.Message(nil), req.Messages...))
 	n := int(atomic.AddInt32(&f.calls, 1)) - 1
 	if n >= len(f.streams) {
 		n = len(f.streams) - 1
@@ -191,5 +193,49 @@ func TestEmptyPromptFails(t *testing.T) {
 	r := NewRunner(&fakeLLM{streams: []*fakeStream{textStream("x")}}, &fakeDispatcher{}, reg())
 	if _, err := r.Run(context.Background(), Task{Prompt: "  "}); err == nil {
 		t.Error("empty prompt should error")
+	}
+}
+
+// Multi-turn memory: a second Run on the same Runner must include the first
+// turn's user prompt and assistant reply in the conversation it sends.
+func TestConversationPersistsAcrossRuns(t *testing.T) {
+	llmc := &fakeLLM{streams: []*fakeStream{textStream("first answer"), textStream("second answer")}}
+	r := NewRunner(llmc, &fakeDispatcher{}, reg())
+
+	if _, err := r.Run(context.Background(), Task{Prompt: "remember X"}); err != nil {
+		t.Fatalf("run 1: %v", err)
+	}
+	if _, err := r.Run(context.Background(), Task{Prompt: "what was X?"}); err != nil {
+		t.Fatalf("run 2: %v", err)
+	}
+
+	if len(llmc.requests) != 2 {
+		t.Fatalf("expected 2 LLM calls, got %d", len(llmc.requests))
+	}
+	second := llmc.requests[1]
+	var sawFirstPrompt, sawFirstAnswer, sawSecondPrompt bool
+	for _, m := range second {
+		switch m.Content {
+		case "remember X":
+			sawFirstPrompt = true
+		case "first answer":
+			sawFirstAnswer = true
+		case "what was X?":
+			sawSecondPrompt = true
+		}
+	}
+	if !sawFirstPrompt || !sawFirstAnswer || !sawSecondPrompt {
+		t.Errorf("second turn missing history: firstPrompt=%v firstAnswer=%v secondPrompt=%v\nmsgs=%+v",
+			sawFirstPrompt, sawFirstAnswer, sawSecondPrompt, second)
+	}
+	// Exactly one system message across the whole conversation.
+	sys := 0
+	for _, m := range second {
+		if m.Role == llm.RoleSystem {
+			sys++
+		}
+	}
+	if sys != 1 {
+		t.Errorf("expected exactly 1 system message, got %d", sys)
 	}
 }
