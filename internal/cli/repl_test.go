@@ -118,3 +118,20 @@ func TestREPLReset(t *testing.T) {
 		t.Errorf("/reset message missing:\n%s", out.String())
 	}
 }
+
+// When the model returns no text, the REPL says so explicitly rather than
+// leaving the user unsure whether a reply was dropped.
+func TestREPLEmptyReplyIsAnnounced(t *testing.T) {
+	core := testCore(t, &fakeClient{
+		model:  "m",
+		chunks: []llm.Chunk{{Kind: llm.ChunkDone, FinishReason: "stop"}}, // no text, no tools
+	})
+	in := bufio.NewReader(strings.NewReader("コメントして\n/exit\n"))
+	var out, errb bytes.Buffer
+	if code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitOK {
+		t.Fatalf("exit = %d", code)
+	}
+	if !strings.Contains(out.String(), "テキスト応答を返しませんでした") {
+		t.Errorf("empty-reply notice missing:\n%s", out.String())
+	}
+}

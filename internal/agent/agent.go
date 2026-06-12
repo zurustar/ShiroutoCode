@@ -87,7 +87,9 @@ Rules:
 - Prefer taking concrete actions (tool calls) over merely describing them.
 - After editing, you may verify with read_file or run_command.
 - The conversation continues across turns: remember earlier instructions, files you created, and results when handling follow-up requests.
-- Only when the task is fully complete, reply with a short final summary and DO NOT call any tool.`
+- To inspect a file's current content, call read_file; do not rely on memory.
+- Always end your turn with a short textual reply to the user — answer their question or summarize what you did. Never end a turn silently with no text.
+- Only when the task is fully complete, give that final textual reply and DO NOT call any tool.`
 
 // Runner executes the agent loop.
 type Runner struct {

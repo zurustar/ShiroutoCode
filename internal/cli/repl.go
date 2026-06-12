@@ -43,7 +43,8 @@ const replHelp = "指示を入力して Enter。コマンド: /model（モデル
 func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufio.Reader, readLine lineReader) int {
 	// One runner for the whole session: its conversation persists across turns,
 	// so follow-up prompts remember earlier instructions, files, and results.
-	runner := core.newRunner(&plainFrontend{w: stdout}, &promptConfirmer{in: r, out: stdout})
+	fe := &plainFrontend{w: stdout}
+	runner := core.newRunner(fe, &promptConfirmer{in: r, out: stdout})
 
 	for {
 		if ctx.Err() != nil {
@@ -77,17 +78,23 @@ func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufi
 			fmt.Fprintf(stdout, "モデル: %s\n", core.Model())
 			continue
 		}
-		runOnce(ctx, runner, prompt, stdout)
+		runOnce(ctx, runner, fe, prompt, stdout)
 	}
 }
 
 // runOnce executes a single instruction on the session runner, streaming events
-// to stdout. The runner carries conversation history across calls.
-func runOnce(ctx context.Context, runner *agent.Runner, prompt string, stdout io.Writer) {
+// to stdout. The runner carries conversation history across calls. When a run
+// completes without the model emitting any text, that is stated explicitly so
+// "no reply" is never ambiguous with a dropped reply.
+func runOnce(ctx context.Context, runner *agent.Runner, fe *plainFrontend, prompt string, stdout io.Writer) {
+	fe.reset()
 	fmt.Fprintln(stdout, "▶ 実行中…")
 	res, err := runner.Run(ctx, agent.Task{Prompt: prompt})
 	if err != nil {
 		res = agent.Result{Status: agent.Failed, Err: err}
+	}
+	if res.Status == agent.Completed && !fe.wroteText {
+		fmt.Fprintln(stdout, "\n（モデルはテキスト応答を返しませんでした。ツール実行のみ、または空の応答です。）")
 	}
 	fmt.Fprintln(stdout, "\n"+doneSummary(res))
 }
