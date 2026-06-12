@@ -36,11 +36,15 @@ func runREPL(ctx context.Context, core *Core, stdout, stderr io.Writer, stdin io
 	return replLoop(ctx, core, stdout, stderr, r, readLine)
 }
 
-const replHelp = "指示を入力して Enter。コマンド: /model（モデル変更） /help /exit（Ctrl+C / Ctrl+D でも終了）"
+const replHelp = "指示を入力して Enter。コマンド: /model（モデル変更） /reset（会話クリア） /help /exit（Ctrl+C / Ctrl+D でも終了）"
 
 // replLoop reads prompts and runs the agent until EOF, /exit, or cancellation.
 // A model must already be selected.
 func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufio.Reader, readLine lineReader) int {
+	// One runner for the whole session: its conversation persists across turns,
+	// so follow-up prompts remember earlier instructions, files, and results.
+	runner := core.newRunner(&plainFrontend{w: stdout}, &promptConfirmer{in: r, out: stdout})
+
 	for {
 		if ctx.Err() != nil {
 			return exitAborted
@@ -61,6 +65,10 @@ func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufi
 		case "/help":
 			fmt.Fprintln(stdout, replHelp)
 			continue
+		case "/reset", "/new":
+			runner.Reset()
+			fmt.Fprintln(stdout, "新しい会話を開始しました（履歴をクリア）。")
+			continue
 		case "/model":
 			if err := replSelectModel(ctx, core, stdout, stderr); err != nil {
 				fmt.Fprintf(stderr, "%s\n", modelSelectError(err))
@@ -69,17 +77,13 @@ func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufi
 			fmt.Fprintf(stdout, "モデル: %s\n", core.Model())
 			continue
 		}
-		runOnce(ctx, core, prompt, stdout, stderr, r)
+		runOnce(ctx, runner, prompt, stdout)
 	}
 }
 
-// runOnce executes a single instruction, streaming events to stdout and using
-// the shared reader for confirmation prompts (so buffered input is not lost).
-func runOnce(ctx context.Context, core *Core, prompt string, stdout, stderr io.Writer, r *bufio.Reader) {
-	fe := &plainFrontend{w: stdout}
-	confirmer := &promptConfirmer{in: r, out: stdout}
-	runner := core.newRunner(fe, confirmer)
-
+// runOnce executes a single instruction on the session runner, streaming events
+// to stdout. The runner carries conversation history across calls.
+func runOnce(ctx context.Context, runner *agent.Runner, prompt string, stdout io.Writer) {
 	fmt.Fprintln(stdout, "▶ 実行中…")
 	res, err := runner.Run(ctx, agent.Task{Prompt: prompt})
 	if err != nil {

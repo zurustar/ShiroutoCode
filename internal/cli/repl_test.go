@@ -86,3 +86,35 @@ func TestDoneSummary(t *testing.T) {
 		}
 	}
 }
+
+// Two prompts in one session both run on the (reused) session runner.
+func TestREPLMultiTurnRunsEachPrompt(t *testing.T) {
+	core := testCore(t, &fakeClient{
+		model: "m",
+		chunks: []llm.Chunk{
+			{Kind: llm.ChunkText, Text: "ok"},
+			{Kind: llm.ChunkDone, FinishReason: "stop"},
+		},
+	})
+	in := bufio.NewReader(strings.NewReader("一回目\n二回目\n/exit\n"))
+	var out, errb bytes.Buffer
+	if code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitOK {
+		t.Fatalf("exit = %d", code)
+	}
+	if n := strings.Count(out.String(), "▶ 実行中…"); n != 2 {
+		t.Errorf("expected 2 runs, saw %d:\n%s", n, out.String())
+	}
+}
+
+// /reset clears the conversation and continues.
+func TestREPLReset(t *testing.T) {
+	core := testCore(t, &fakeClient{model: "m"})
+	in := bufio.NewReader(strings.NewReader("/reset\n/exit\n"))
+	var out, errb bytes.Buffer
+	if code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitOK {
+		t.Fatalf("exit = %d", code)
+	}
+	if !strings.Contains(out.String(), "新しい会話") {
+		t.Errorf("/reset message missing:\n%s", out.String())
+	}
+}
