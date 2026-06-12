@@ -23,7 +23,7 @@ func TestREPLRunsThenExits(t *testing.T) {
 	in := bufio.NewReader(strings.NewReader("テストを書いて\n/exit\n"))
 	var out, errb bytes.Buffer
 
-	code := replLoop(context.Background(), core, &out, &errb, in)
+	code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out))
 	if code != exitOK {
 		t.Fatalf("exit = %d, want %d; stderr=%s", code, exitOK, errb.String())
 	}
@@ -40,7 +40,7 @@ func TestREPLEOFExits(t *testing.T) {
 	core := testCore(t, &fakeClient{model: "m"})
 	in := bufio.NewReader(strings.NewReader(""))
 	var out, errb bytes.Buffer
-	if code := replLoop(context.Background(), core, &out, &errb, in); code != exitOK {
+	if code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitOK {
 		t.Errorf("exit = %d, want %d", code, exitOK)
 	}
 }
@@ -50,7 +50,7 @@ func TestREPLHelpAndEmptyLines(t *testing.T) {
 	core := testCore(t, &fakeClient{model: "m"})
 	in := bufio.NewReader(strings.NewReader("\n   \n/help\n/exit\n"))
 	var out, errb bytes.Buffer
-	if code := replLoop(context.Background(), core, &out, &errb, in); code != exitOK {
+	if code := replLoop(context.Background(), core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitOK {
 		t.Fatalf("exit = %d", code)
 	}
 	if !strings.Contains(out.String(), "/model") {
@@ -65,7 +65,7 @@ func TestREPLContextCanceled(t *testing.T) {
 	cancel()
 	in := bufio.NewReader(strings.NewReader("anything\n"))
 	var out, errb bytes.Buffer
-	if code := replLoop(ctx, core, &out, &errb, in); code != exitAborted {
+	if code := replLoop(ctx, core, &out, &errb, in, newLineReader(-1, in, &out)); code != exitAborted {
 		t.Errorf("exit = %d, want %d", code, exitAborted)
 	}
 }

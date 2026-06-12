@@ -12,19 +12,18 @@ import (
 )
 
 // runREPL is the interactive read-eval loop. It uses plain streaming output
-// (not a full-screen TUI): the terminal's native line editing is used for the
-// prompt — so Japanese/IME input works correctly — and agent events stream to
-// stdout as they happen, so progress is visible while the LLM works.
+// (not a full-screen TUI): agent events stream to stdout as they happen so
+// progress is visible while the LLM works, and prompts are read with a
+// raw-mode line editor that handles UTF-8 / full-width (Japanese) input —
+// backspace deletes a whole character and Ctrl+C exits immediately.
 func runREPL(ctx context.Context, core *Core, stdout, stderr io.Writer, stdin io.Reader) int {
-	// Ensure the terminal edits multibyte (Japanese) input correctly: canonical
-	// mode + echo + IUTF8 so one backspace erases a whole character. No-op when
-	// stdin is not a real terminal (tests, pipes).
-	if f, ok := stdin.(*os.File); ok {
-		restore := enableCookedUTF8(int(f.Fd()))
-		defer restore()
-	}
-
 	r := bufio.NewReader(stdin)
+
+	fd := -1
+	if f, ok := stdin.(*os.File); ok {
+		fd = int(f.Fd())
+	}
+	readLine := newLineReader(fd, r, stdout)
 
 	// Choose the model after launch (per design). Pre-select any configured one.
 	if err := replSelectModel(ctx, core, stdout, stderr); err != nil {
@@ -34,24 +33,24 @@ func runREPL(ctx context.Context, core *Core, stdout, stderr io.Writer, stdin io
 
 	fmt.Fprintf(stdout, "\nShiroutoCode 対話モード — モデル: %s\n%s\n", core.Model(), replHelp)
 
-	return replLoop(ctx, core, stdout, stderr, r)
+	return replLoop(ctx, core, stdout, stderr, r, readLine)
 }
 
-const replHelp = "指示を入力して Enter。コマンド: /model（モデル変更） /help /exit（Ctrl+D でも終了）"
+const replHelp = "指示を入力して Enter。コマンド: /model（モデル変更） /help /exit（Ctrl+C / Ctrl+D でも終了）"
 
 // replLoop reads prompts and runs the agent until EOF, /exit, or cancellation.
 // A model must already be selected.
-func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufio.Reader) int {
+func replLoop(ctx context.Context, core *Core, stdout, stderr io.Writer, r *bufio.Reader, readLine lineReader) int {
 	for {
 		if ctx.Err() != nil {
 			return exitAborted
 		}
-		fmt.Fprint(stdout, "\n> ")
-		line, err := r.ReadString('\n')
+		line, err := readLine("\n> ")
 		if err != nil {
-			// EOF (Ctrl+D) or read error: end the session cleanly.
-			fmt.Fprintln(stdout)
-			return exitOK
+			if err == errInterrupted {
+				return exitAborted // Ctrl+C
+			}
+			return exitOK // EOF (Ctrl+D) or read error: end cleanly
 		}
 		prompt := strings.TrimSpace(line)
 		switch prompt {
