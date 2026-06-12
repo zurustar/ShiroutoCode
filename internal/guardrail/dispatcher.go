@@ -59,7 +59,9 @@ func (d *ToolDispatcher) Dispatch(ctx context.Context, call tools.ToolCall) (too
 	if !ok {
 		return tools.ToolResult{}, fmt.Errorf("unknown tool: %s", call.Name)
 	}
-	d.logger.Info("guardrail: executing", "tool", call.Name, "decision", int(dec.Kind))
+	// Debug, not Info: the interactive frontend already shows each tool call,
+	// so logging every execution at Info clutters the REPL output.
+	d.logger.Debug("guardrail: executing", "tool", call.Name, "decision", int(dec.Kind))
 	return tool.Execute(ctx, call.Args)
 }
 
