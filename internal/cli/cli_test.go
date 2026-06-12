@@ -136,15 +136,16 @@ func TestRunNoPromptNonTTY(t *testing.T) {
 	}
 }
 
-// Missing required config (model) -> usage error.
-func TestRunMissingModel(t *testing.T) {
+// Non-TTY single-shot with no model can't open the picker -> usage error with
+// guidance to set a model or run interactively.
+func TestRunMissingModelNonTTY(t *testing.T) {
 	var out, errb bytes.Buffer
 	code := Run(context.Background(), []string{"hello"}, &out, &errb, strings.NewReader(""),
 		Env{"SHIROUTO_WORKSPACE": t.TempDir()}, false)
 	if code != exitUsage {
 		t.Errorf("exit = %d, want %d", code, exitUsage)
 	}
-	if !strings.Contains(errb.String(), "設定エラー") {
-		t.Errorf("config error not shown: %s", errb.String())
+	if !strings.Contains(errb.String(), "モデル") {
+		t.Errorf("model guidance not shown: %s", errb.String())
 	}
 }

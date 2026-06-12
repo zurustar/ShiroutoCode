@@ -46,13 +46,41 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer, stdin io.
 
 	switch {
 	case prompt != "":
+		// Single-shot: a model must be resolved before running. Pick
+		// interactively on a TTY; otherwise it is a usage error.
+		if core.Model() == "" {
+			if !isTTY {
+				fmt.Fprintln(stderr, "モデルが指定されていません。--model か SHIROUTO_MODEL で指定するか、端末で対話起動して選択してください。")
+				return exitUsage
+			}
+			chosen, err := selectModelStandalone(ctx, core, "", stdout)
+			if err != nil {
+				fmt.Fprintf(stderr, "%s\n", modelSelectError(err))
+				return exitUsage
+			}
+			core.SetModel(chosen)
+		}
 		return runSingleShot(ctx, core, prompt, stdout, stderr, stdin, isTTY)
 	case isTTY:
+		// REPL: the picker is presented at startup (and via /model).
 		return runREPL(ctx, core, stdout, stderr)
 	default:
 		fmt.Fprintln(stderr, `使い方: shiroutocode "<指示>"   （または端末で対話モード）`)
 		return exitUsage
 	}
+}
+
+// modelSelectError renders a user-facing message for a failed model selection,
+// surfacing LLM connection guidance (US-6.1) when applicable.
+func modelSelectError(err error) string {
+	if errors.Is(err, errModelSelectionCanceled) {
+		return "モデルが選択されませんでした。"
+	}
+	var le *llm.LLMError
+	if errors.As(err, &le) {
+		return le.UserMessage
+	}
+	return err.Error()
 }
 
 // extractPrompt parses flags (so positional args are isolated) and returns the

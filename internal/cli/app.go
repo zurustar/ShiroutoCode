@@ -4,6 +4,7 @@
 package cli
 
 import (
+	"context"
 	"net"
 	"net/url"
 
@@ -15,11 +16,21 @@ import (
 	"github.com/zurustar/shiroutocode/internal/tools"
 )
 
+// llmClient is the LLM surface the CLI needs: completions (for the agent) plus
+// model management (for the interactive picker and the /model command).
+// *llm.Client satisfies it.
+type llmClient interface {
+	llm.LLMClient
+	Model() string
+	SetModel(string)
+	ListModels(ctx context.Context) ([]string, error)
+}
+
 // Core holds the front-agnostic wiring built from config (U1-U3 + LLM).
 type Core struct {
 	cfg    config.Config
 	logger log.Logger
-	client llm.LLMClient
+	client llmClient
 	reg    *tools.Registry
 	policy guardrail.Policy
 }
@@ -67,6 +78,17 @@ func warnInsecureEndpoint(endpoint string, logger log.Logger) {
 		return
 	}
 	logger.Warn("llm endpoint uses cleartext http to a non-loopback host; prompts and file contents are sent unencrypted — prefer https", "endpoint", endpoint)
+}
+
+// Model reports the model the core currently targets ("" if unselected).
+func (c *Core) Model() string { return c.client.Model() }
+
+// SetModel switches the target model (interactive picker / REPL /model).
+func (c *Core) SetModel(m string) { c.client.SetModel(m) }
+
+// ListModels returns the model ids the server exposes (for the picker).
+func (c *Core) ListModels(ctx context.Context) ([]string, error) {
+	return c.client.ListModels(ctx)
 }
 
 // newRunner builds an agent Runner bound to the given frontend and confirmer.

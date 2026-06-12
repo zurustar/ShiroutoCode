@@ -97,7 +97,7 @@ func (c *Client) setCaps(supportsFC bool) {
 // doStreaming builds the payload for the mode, sends with retries until headers
 // are established, and returns a Stream.
 func (c *Client) doStreaming(ctx context.Context, req Request, mode ToolMode) (Stream, error) {
-	body, err := buildBody(c.model, req, mode)
+	body, err := buildBody(c.Model(), req, mode)
 	if err != nil {
 		return nil, newDecodeError(err)
 	}
