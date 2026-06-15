@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"io"
+	"strings"
 	"sync/atomic"
 	"testing"
 
@@ -263,5 +264,51 @@ func TestFailedRunRollsBackHistory(t *testing.T) {
 	// Only the system message should remain; the failed user turn is gone.
 	if len(r.history) != 1 || r.history[0].Role != llm.RoleSystem {
 		t.Errorf("history not rolled back: %+v", r.history)
+	}
+}
+
+// Reaching the step limit triggers a handoff summary and compacts the
+// conversation to [system, summary] so a follow-up can continue.
+func TestStepLimitSummarizesAndCompacts(t *testing.T) {
+	// maxSteps=1: step 1 calls a tool (limit hit), then the summary call
+	// returns text.
+	llmc := &fakeLLM{streams: []*fakeStream{
+		toolStream("run_command", "c1"),
+		textStream("完了: a.go作成。次: b.goを実装。"),
+	}}
+	r := NewRunner(llmc, &fakeDispatcher{}, reg(), WithMaxSteps(1))
+
+	res, err := r.Run(context.Background(), Task{Prompt: "build it"})
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if res.Status != StoppedMaxSteps {
+		t.Fatalf("status = %v, want StoppedMaxSteps", res.Status)
+	}
+	if !strings.Contains(res.Summary, "完了: a.go") {
+		t.Errorf("summary = %q", res.Summary)
+	}
+	// History compacted to system + the summary handoff.
+	if len(r.history) != 2 || r.history[0].Role != llm.RoleSystem || r.history[1].Role != llm.RoleAssistant {
+		t.Fatalf("history not compacted: %+v", r.history)
+	}
+	if !strings.Contains(r.history[1].Content, "完了: a.go") {
+		t.Errorf("compacted history missing summary: %q", r.history[1].Content)
+	}
+}
+
+// If the summary call fails, the run still stops cleanly without compacting.
+func TestStepLimitSummaryFailureKeepsHistory(t *testing.T) {
+	// First call: tool (hits limit). Summary call: error stream is simulated by
+	// reusing a tool stream that yields no text -> empty summary -> no compaction.
+	llmc := &fakeLLM{streams: []*fakeStream{toolStream("run_command", "c1")}}
+	r := NewRunner(llmc, &fakeDispatcher{}, reg(), WithMaxSteps(1))
+	res, _ := r.Run(context.Background(), Task{Prompt: "x"})
+	if res.Status != StoppedMaxSteps {
+		t.Fatalf("status = %v", res.Status)
+	}
+	// No compaction (summary empty): history still holds the full turn.
+	if len(r.history) <= 2 {
+		t.Errorf("history unexpectedly compacted with empty summary: %+v", r.history)
 	}
 }
