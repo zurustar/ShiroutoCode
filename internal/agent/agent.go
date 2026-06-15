@@ -194,7 +194,48 @@ func (r *Runner) Run(ctx context.Context, task Task) (Result, error) {
 		}
 	}
 
-	return Result{Status: StoppedMaxSteps, ChangedFiles: changed, Steps: r.maxSteps}, nil
+	// Step limit reached without completing. Summarize progress for handoff and
+	// compact the conversation so a follow-up can continue from the summary
+	// (and the bloated history does not overflow the model's context).
+	summary := r.summarizeForHandoff(ctx)
+	if summary != "" {
+		r.history = []llm.Message{
+			{Role: llm.RoleSystem, Content: r.system},
+			{Role: llm.RoleAssistant, Content: handoffPrefix + summary},
+		}
+	}
+	return Result{Status: StoppedMaxSteps, Summary: summary, ChangedFiles: changed, Steps: r.maxSteps}, nil
+}
+
+// handoffPrefix labels a compacted progress summary in the conversation.
+const handoffPrefix = "（前回の進捗要約 / handoff）\n"
+
+// stepLimitSummaryPrompt asks the model to produce a continuation handoff.
+const stepLimitSummaryPrompt = `ステップ上限に達したため一旦停止します。次のセッションで作業を継続できるよう、日本語で簡潔に要約してください:
+1) これまでに完了したこと（作成・編集したファイルを含む）
+2) 現在の状態
+3) 残っている作業と、具体的な次のステップ
+ツールは呼び出さず、要約テキストだけを返してください。`
+
+// summarizeForHandoff makes one tool-free LLM call to summarize progress. It is
+// best-effort: on cancellation or any error it returns "" and the caller keeps
+// the full history rather than compacting.
+func (r *Runner) summarizeForHandoff(ctx context.Context) string {
+	if ctx.Err() != nil {
+		return ""
+	}
+	msgs := append(append([]llm.Message{}, r.history...),
+		llm.Message{Role: llm.RoleUser, Content: stepLimitSummaryPrompt})
+	stream, err := r.llm.Complete(ctx, llm.Request{Messages: msgs, Stream: true, ToolMode: r.toolMode})
+	if err != nil {
+		return ""
+	}
+	res, cerr := llm.CollectStreaming(stream, r.fe.OnAssistantText)
+	stream.Close()
+	if cerr != nil {
+		return ""
+	}
+	return res.Text
 }
 
 // finishErr classifies a failure and, when it is a genuine failure (not a

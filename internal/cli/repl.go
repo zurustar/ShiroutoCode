@@ -128,7 +128,7 @@ func doneSummary(res agent.Result) string {
 		}
 		return s
 	case agent.StoppedMaxSteps:
-		return "⏹ 最大ステップに到達（未完）"
+		return "⏹ 最大ステップに到達（未完）。上の進捗要約を引き継いだので、「続けて」などで継続できます。"
 	case agent.Aborted:
 		return "⏹ 中断されました"
 	default:
