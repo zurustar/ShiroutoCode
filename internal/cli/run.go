@@ -98,6 +98,9 @@ func extractPrompt(args []string, stderr io.Writer) (string, error) {
 }
 
 func runSingleShot(ctx context.Context, core *Core, prompt string, stdout, stderr io.Writer, stdin io.Reader, isTTY bool) int {
+	if core.AgentsLoaded() {
+		fmt.Fprintln(stderr, "📄 AGENTS.md のプロジェクト指示を適用中。")
+	}
 	fe := &plainFrontend{w: stdout}
 	var confirmer guardrail.Confirmer
 	if isTTY {

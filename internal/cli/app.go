@@ -28,12 +28,17 @@ type llmClient interface {
 
 // Core holds the front-agnostic wiring built from config (U1-U3 + LLM).
 type Core struct {
-	cfg    config.Config
-	logger log.Logger
-	client llmClient
-	reg    *tools.Registry
-	policy guardrail.Policy
+	cfg          config.Config
+	logger       log.Logger
+	client       llmClient
+	reg          *tools.Registry
+	policy       guardrail.Policy
+	system       string // composed system prompt (default + AGENTS.md if present)
+	agentsLoaded bool   // AGENTS.md was found and applied
 }
+
+// AgentsLoaded reports whether project instructions from AGENTS.md are applied.
+func (c *Core) AgentsLoaded() bool { return c.agentsLoaded }
 
 // BuildCore assembles the LLM client, tool registry and guardrail policy.
 func BuildCore(cfg config.Config, logger log.Logger) *Core {
@@ -59,7 +64,16 @@ func BuildCore(cfg config.Config, logger log.Logger) *Core {
 		ConfirmMode:       cfg.Guardrail.ConfirmMode,
 		ExtraDenyPatterns: cfg.Guardrail.ExtraDenyPatterns,
 	}
-	return &Core{cfg: cfg, logger: logger, client: client, reg: reg, policy: policy}
+
+	// Follow the agents.md convention: a workspace-root AGENTS.md provides
+	// project-specific instructions that are folded into the system prompt.
+	doc, ok := loadAgentsDoc(cfg.Workspace)
+	if ok {
+		logger.Debug("loaded project instructions", "file", agentsFileName)
+	}
+	system := composeSystemPrompt(agent.DefaultSystemPrompt, doc)
+
+	return &Core{cfg: cfg, logger: logger, client: client, reg: reg, policy: policy, system: system, agentsLoaded: ok}
 }
 
 // warnInsecureEndpoint warns when the LLM endpoint is cleartext http to a
@@ -97,10 +111,14 @@ func (c *Core) ListModels(ctx context.Context) ([]string, error) {
 func (c *Core) newRunner(fe agent.Frontend, confirmer guardrail.Confirmer) *agent.Runner {
 	ev := guardrail.NewEvaluator(c.policy)
 	disp := guardrail.NewToolDispatcher(c.reg, ev, confirmer, c.logger)
-	return agent.NewRunner(c.client, disp, c.reg,
+	opts := []agent.Option{
 		agent.WithFrontend(fe),
 		agent.WithLogger(c.logger),
 		agent.WithMaxSteps(c.cfg.MaxSteps),
 		agent.WithToolMode(llm.ToolMode(c.cfg.ToolMode)),
-	)
+	}
+	if c.system != "" {
+		opts = append(opts, agent.WithSystemPrompt(c.system))
+	}
+	return agent.NewRunner(c.client, disp, c.reg, opts...)
 }
