@@ -31,7 +31,11 @@ func runREPL(ctx context.Context, core *Core, stdout, stderr io.Writer, stdin io
 		return exitUsage
 	}
 
-	fmt.Fprintf(stdout, "\nShiroutoCode 対話モード — モデル: %s\n%s\n", core.Model(), replHelp)
+	fmt.Fprintf(stdout, "\nShiroutoCode 対話モード — モデル: %s\n", core.Model())
+	if core.AgentsLoaded() {
+		fmt.Fprintln(stdout, "📄 AGENTS.md のプロジェクト指示を適用中。")
+	}
+	fmt.Fprintln(stdout, replHelp)
 
 	return replLoop(ctx, core, stdout, stderr, r, readLine)
 }
